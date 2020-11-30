@@ -14,6 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import lombok.extern.slf4j.Slf4j;
 import org.reactfx.util.Lists;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+@Slf4j
 @Component
 public class GameView extends StackPane implements InitializingBean {
     
@@ -64,26 +65,26 @@ public class GameView extends StackPane implements InitializingBean {
                             return new Background(
                                     new BackgroundFill(snakeBodyPartFX.colorProperty().get(), CornerRadii.EMPTY, Insets.EMPTY));
                         }, snakeBodyPartFX.colorProperty()));
-                bodyPartPane.layoutXProperty().bind(Bindings.createObjectBinding(()->{
-                    return snakeBodyPartFX.xProperty().get() * 10; //fix
-                }, snakeBodyPartFX.xProperty(), gameViewModel.gridXAmountProperty(), arenaPane.widthProperty()));
-                bodyPartPane.layoutYProperty().bind(Bindings.createObjectBinding(()->{
-                    return snakeBodyPartFX.yProperty().get() * 10; //fix
-                }, snakeBodyPartFX.yProperty(), gameViewModel.gridYAmountProperty(), arenaPane.heightProperty()));
+                snakeBodyPartFX.xProperty().addListener((obs, oldValue, newValue) -> {
+                    AnchorPane.setLeftAnchor(bodyPartPane, snakeBodyPartFX.xProperty().get() * 10d);
+                });
+                snakeBodyPartFX.yProperty().addListener((obs, oldValue, newValue) -> {
+                    AnchorPane.setLeftAnchor(bodyPartPane, snakeBodyPartFX.yProperty().get() * 10d);
+                });
                 return bodyPartPane;
             }).collect(Collectors.toList()));
         }, gameViewModel.snakeFX().bodyPartsProperty()));
-        snakeNodes.addListener((obs, oldValue, newValue)->{
+        snakeNodes.addListener((obs, oldValue, newValue) -> {
             arenaPane.getChildren().setAll(snakeNodes);
         });
         
         //Initialize Display
         displayLabel = new Label();
         displayLabel.getStyleClass().clear();
-        displayLabel.graphicProperty().bind(Bindings.createObjectBinding(()->{
+        displayLabel.graphicProperty().bind(Bindings.createObjectBinding(() -> {
             var phase = gameViewModel.phaseProperty().get();
             
-            switch(phase){
+            switch (phase) {
                 case MAIN_MENU -> {
                     return logoButton;
                 }
@@ -95,7 +96,7 @@ public class GameView extends StackPane implements InitializingBean {
         }, gameViewModel.phaseProperty()));
         
         //Initialize Key presses
-        this.setOnKeyPressed(event->{
+        this.setOnKeyPressed(event -> {
             MoveDirection moveDirectionRequested = switch (event.getCode()) {
                 case UP -> MoveDirection.UP;
                 case DOWN -> MoveDirection.DOWN;

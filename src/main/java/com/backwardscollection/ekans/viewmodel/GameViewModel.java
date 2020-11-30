@@ -10,9 +10,11 @@ import javafx.beans.property.*;
 import javafx.util.Duration;
 import lombok.Value;
 import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Accessors(fluent = true)
 @Value
 @Component
@@ -48,6 +50,7 @@ public class GameViewModel implements InitializingBean {
                 }
                 case PLAY -> {
                     start();
+                    log.debug("PLAY");
                 }
                 case END -> {
                     end();
@@ -78,9 +81,12 @@ public class GameViewModel implements InitializingBean {
         foodFX.yProperty().set(EkansUtility.generateRandomIntInRange(gridYAmountProperty.get(), 0));
         
         timeline.play();
+        log.debug("START");
+    
     }
     
     public void step() {
+        log.debug("STEP");
         //Check if game over (if head is on another body part
         
         //If snake is on food then grow snake at end after move and move food to place snake isn't
@@ -103,6 +109,8 @@ public class GameViewModel implements InitializingBean {
                 x++;
             }
         }
+        log.debug("X{}", x);
+        log.debug("Y{}", y);
         int gridX = gridXAmountProperty.get();
         int gridY = gridYAmountProperty.get();
         if (x > gridX || x < 0 || y > gridY || y < 0) {
