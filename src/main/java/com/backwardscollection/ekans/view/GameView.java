@@ -61,6 +61,8 @@ public class GameView extends StackPane implements InitializingBean {
                 var bodyPartPane = new Pane();
                 bodyPartPane.setMinHeight(10);//temp
                 bodyPartPane.setMinWidth(10);//temp
+                AnchorPane.setLeftAnchor(bodyPartPane, snakeBodyPartFX.xProperty().get() * 10d);
+                AnchorPane.setTopAnchor(bodyPartPane, snakeBodyPartFX.yProperty().get() * 10d);
                 bodyPartPane.backgroundProperty().bind(Bindings.createObjectBinding(
                         () -> {
                             return new Background(
