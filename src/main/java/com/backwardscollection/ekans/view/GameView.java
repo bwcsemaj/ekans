@@ -36,6 +36,7 @@ public class GameView extends StackPane implements InitializingBean {
     private Button logoButton;
     private AnchorPane arenaPane;
     private ListProperty<Node> snakeNodes = new SimpleListProperty<>();
+    private Pane foodPane;
     
     @Autowired
     public GameView(GameViewModel gameViewModel) {
@@ -80,8 +81,31 @@ public class GameView extends StackPane implements InitializingBean {
             }).collect(Collectors.toList()));
         }, gameViewModel.snakeFX().bodyPartsProperty()));
         snakeNodes.addListener((obs, oldValue, newValue) -> {
-            arenaPane.getChildren().setAll(snakeNodes);
+            arenaPane.getChildren().clear();
+            arenaPane.getChildren().add(foodPane);
+            arenaPane.getChildren().addAll(snakeNodes);
         });
+        
+        //Initialize Food
+        foodPane = new Pane();
+        foodPane.setMinHeight(10);//temp
+        foodPane.setMinWidth(10);//temp
+        var foodFX = gameViewModel.foodFX();
+        AnchorPane.setLeftAnchor(foodPane, foodFX.xProperty().get() * 10d);
+        AnchorPane.setTopAnchor(foodPane, foodFX.yProperty().get() * 10d);
+        foodFX.xProperty().addListener((obs, oldValue, newValue) -> {
+            log.debug("X{}", newValue.doubleValue() * 10d);
+            AnchorPane.setLeftAnchor(foodPane, newValue.doubleValue() * 10d);
+        });
+        foodFX.yProperty().addListener((obs, oldValue, newValue) -> {
+            log.debug("Y{}", newValue.doubleValue() * 10d);
+            AnchorPane.setTopAnchor(foodPane, newValue.doubleValue() * 10d);
+        });
+        foodPane.backgroundProperty().bind(Bindings.createObjectBinding(()->{
+            return new Background(new BackgroundFill(foodFX.colorProperty().get(), CornerRadii.EMPTY, Insets.EMPTY));
+        }, foodFX.colorProperty()));
+        foodPane.visibleProperty().bind(foodFX.visibleProperty());
+        
         
         //Initialize Display
         displayLabel = new Label();

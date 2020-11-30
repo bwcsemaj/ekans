@@ -87,40 +87,44 @@ public class GameViewModel implements InitializingBean {
     
     public void step() {
         log.debug("STEP");
+        //local variables
+        var headBodyPartFX = snakeFX.bodyPartsProperty().get(0);
+        int headX = headBodyPartFX.xProperty().get();
+        int headY = headBodyPartFX.yProperty().get();
+        var foodX = foodFX.xProperty().get();
+        var foodY = foodFX.yProperty().get();
         //Check if game over (if head is on another body part
         
-        //If snake is on food then grow snake at end after move and move food to place snake isn't
-        
         //move
-        var headBodyPartFX = snakeFX.bodyPartsProperty().get(0);
-        int x = headBodyPartFX.xProperty().get();
-        int y = headBodyPartFX.yProperty().get();
         switch (lastValidMoveDirectionProperty.get()) {
             case UP -> {
-                y--;
+                headY--;
             }
             case DOWN -> {
-                y++;
+                headY++;
             }
             case LEFT -> {
-                x--;
+                headX--;
             }
             case RIGHT -> {
-                x++;
+                headX++;
             }
         }
-        log.debug("X{}", x);
-        log.debug("Y{}", y);
         int gridX = gridXAmountProperty.get();
         int gridY = gridYAmountProperty.get();
-        if (x > gridX || x < 0 || y > gridY || y < 0) {
+        if (headX > gridX || headX < 0 || headY > gridY || headY < 0) {
             phaseProperty.set(GamePhase.END);
             return;
         }
-        headBodyPartFX.xProperty().set(x);
-        headBodyPartFX.yProperty().set(y);
+    
+        //If snake is on food then grow snake at end after move and move food to place snake isn't
+        if(headX == foodX && headY == foodY){
+            snakeFX.grow(headX, headY);
+        }   else{
+            snakeFX.move(headX, headY);
+        }
         
-        //try grow if possible
+        
     }
     
     public void end() {
