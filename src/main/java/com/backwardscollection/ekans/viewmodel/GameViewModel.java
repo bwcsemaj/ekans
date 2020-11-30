@@ -20,7 +20,7 @@ public class GameViewModel implements InitializingBean {
     
     private final SnakeFX snakeFX = new SnakeFX();
     private final FoodFX foodFX = new FoodFX();
-    private final ObjectProperty<GamePhase> phaseProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<GamePhase> phaseProperty = new SimpleObjectProperty<>(GamePhase.MAIN_MENU);
     private final LongProperty startTimeProperty = new SimpleLongProperty();
     private final IntegerProperty pointsProperty = new SimpleIntegerProperty();
     
