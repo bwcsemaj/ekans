@@ -1,0 +1,38 @@
+* {
+    COLOR-0: rgb(255,240,255);
+    COLOR-1: rgb(255,233,255);
+    COLOR-2: rgb(255,225,255);
+    COLOR-3: rgb(251,218,255);
+    COLOR-4: rgb(244,210,255);
+    COLOR-5: rgb(236,203,250);
+    COLOR-6: rgb(229,195,242);
+    COLOR-7: rgb(221,188,235);
+    COLOR-8: rgb(214,180,227);
+    COLOR-9: rgb(206,173,220);
+    COLOR-10: rgb(199,165,212);
+    COLOR-11: rgb(195,161,209);
+    COLOR-12: rgb(175,141,188);
+    COLOR-13: rgb(154,121,168);
+    COLOR-14: rgb(134,101,148);
+    COLOR-15: rgb(114,81,128);
+    COLOR-16: rgb(94,61,108);
+    COLOR-17: rgb(74,40,88);
+    COLOR-18: rgb(54,20,68);
+    COLOR-19: rgb(34,0,47);
+    COLOR-20: rgb(13,0,27);
+
+    SEQUENCE_CALULATION: rgb(206,173,220);
+    PROFILE_BACKGROUND: rgb(236,203,250);
+    BACKGROUND: rgb(134,101,148);
+    PANE_BACKGROUND: rgb(74,40,88);
+    BULL: rgb(255,225,255);
+    IN: rgb(221,188,235);
+    NOT_IN: rgb(94,61,108);
+    CLEAR2: rgb(214,180,227);
+    SELECT: rgb(244,210,255);
+    ODD_EVEN: rgb(236,203,250);
+}
+
+#label{
+    fx-background-color: COLOR-10;
+}
