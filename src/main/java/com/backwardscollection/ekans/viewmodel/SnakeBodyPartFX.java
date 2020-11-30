@@ -43,9 +43,11 @@ public class SnakeBodyPartFX {
         //When a body moves to a new position take the old position of the body in front
         bodyPartInFrontFX.xProperty.addListener((obs, oldValue, newValue) -> {
             xProperty.set(oldValue.intValue());
+            yProperty.set(bodyPartInFrontFX.yProperty.get());
         });
         bodyPartInFrontFX.yProperty.addListener((obs, oldValue, newValue) -> {
             yProperty.set(oldValue.intValue());
+            xProperty.set(bodyPartInFrontFX.xProperty.get());
         });
     }
 }
