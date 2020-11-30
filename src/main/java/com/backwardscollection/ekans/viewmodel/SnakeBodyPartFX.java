@@ -1,4 +1,4 @@
-package com.backwardscollection.ekans.model;
+package com.backwardscollection.ekans.viewmodel;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;

@@ -1,4 +1,4 @@
-package com.backwardscollection.ekans.model;
+package com.backwardscollection.ekans.viewmodel;
 
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;

@@ -1,4 +1,4 @@
-package com.backwardscollection.ekans.model;
+package com.backwardscollection.ekans.viewmodel;
 
 import javafx.beans.property.*;
 import javafx.scene.paint.Color;
