@@ -3,6 +3,7 @@ package com.backwardscollection.ekans.view;
 import com.backwardscollection.ekans.config.GamePhase;
 import com.backwardscollection.ekans.config.MoveDirection;
 import com.backwardscollection.ekans.viewmodel.GameViewModel;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -66,10 +67,12 @@ public class GameView extends StackPane implements InitializingBean {
                                     new BackgroundFill(snakeBodyPartFX.colorProperty().get(), CornerRadii.EMPTY, Insets.EMPTY));
                         }, snakeBodyPartFX.colorProperty()));
                 snakeBodyPartFX.xProperty().addListener((obs, oldValue, newValue) -> {
-                    AnchorPane.setLeftAnchor(bodyPartPane, snakeBodyPartFX.xProperty().get() * 10d);
+                    log.debug("X{}", newValue.doubleValue() * 10d);
+                    AnchorPane.setLeftAnchor(bodyPartPane, newValue.doubleValue() * 10d);
                 });
                 snakeBodyPartFX.yProperty().addListener((obs, oldValue, newValue) -> {
-                    AnchorPane.setLeftAnchor(bodyPartPane, snakeBodyPartFX.yProperty().get() * 10d);
+                    log.debug("Y{}", newValue.doubleValue() * 10d);
+                    AnchorPane.setTopAnchor(bodyPartPane, newValue.doubleValue() * 10d);
                 });
                 return bodyPartPane;
             }).collect(Collectors.toList()));
@@ -96,15 +99,18 @@ public class GameView extends StackPane implements InitializingBean {
         }, gameViewModel.phaseProperty()));
         
         //Initialize Key presses
-        this.setOnKeyPressed(event -> {
-            MoveDirection moveDirectionRequested = switch (event.getCode()) {
-                case UP -> MoveDirection.UP;
-                case DOWN -> MoveDirection.DOWN;
-                case LEFT -> MoveDirection.LEFT;
-                case RIGHT -> MoveDirection.RIGHT;
-                default -> null;
-            };
-            gameViewModel.moveDirectionRequestProperty().set(moveDirectionRequested);
+        Platform.runLater(() -> {
+            this.getScene().setOnKeyPressed(event -> {
+                MoveDirection moveDirectionRequested = switch (event.getCode()) {
+                    case UP -> MoveDirection.UP;
+                    case DOWN -> MoveDirection.DOWN;
+                    case LEFT -> MoveDirection.LEFT;
+                    case RIGHT -> MoveDirection.RIGHT;
+                    default -> null;
+                };
+                log.debug("MOVE{}", moveDirectionRequested);
+                gameViewModel.moveDirectionRequestProperty().set(moveDirectionRequested);
+            });
         });
         
         //Initialize Root/Content Stuff

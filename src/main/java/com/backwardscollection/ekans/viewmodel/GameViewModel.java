@@ -38,7 +38,7 @@ public class GameViewModel implements InitializingBean {
             event -> {
                 step();
             }
-    ), new KeyFrame(Duration.millis(16)));
+    ), new KeyFrame(Duration.millis(500)));
     
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -97,10 +97,10 @@ public class GameViewModel implements InitializingBean {
         int y = headBodyPartFX.yProperty().get();
         switch (lastValidMoveDirectionProperty.get()) {
             case UP -> {
-                y++;
+                y--;
             }
             case DOWN -> {
-                y--;
+                y++;
             }
             case LEFT -> {
                 x--;
@@ -117,6 +117,8 @@ public class GameViewModel implements InitializingBean {
             phaseProperty.set(GamePhase.END);
             return;
         }
+        headBodyPartFX.xProperty().set(x);
+        headBodyPartFX.yProperty().set(y);
         
         //try grow if possible
     }
