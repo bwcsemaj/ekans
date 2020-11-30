@@ -23,31 +23,40 @@ public class GameViewModel implements InitializingBean {
     private final LongProperty startTimeProperty = new SimpleLongProperty();
     private final IntegerProperty pointsProperty = new SimpleIntegerProperty();
     
-    private final ListProperty<MoveDirection> moveDirectionRequestProperty = new SimpleListProperty();
+    private final ObjectProperty<MoveDirection> moveDirectionRequestProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<MoveDirection> lastValidMoveDirectionProperty = new SimpleObjectProperty<>(MoveDirection.RIGHT);
     
     @Override
     public void afterPropertiesSet() throws Exception {
         //Listen for when phase changes
-        phaseProperty.addListener((obs, oldValue, newValue)->{
-            switch(newValue){
-    
+        phaseProperty.addListener((obs, oldValue, newValue) -> {
+            switch (newValue) {
                 case MAIN_MENU -> {
                 
                 }
                 case PLAY -> {
+                
                 }
                 case END -> {
+                
                 }
             }
         });
         
     }
     
-    public void start(){
-    
+    public void start() {
+        //Initialize Snake
+        snakeFX.bodyPartsProperty().clear();
+        snakeFX.grow(gridXAmountProperty.get() / 2, gridYAmountProperty.get() / 2);
+        
+        //Initialize Food
+        foodFX.xProperty().set();
     }
     
-    public void step(){
+    public void step() {
+        //Check if game over (if head is on another body part
+        
         //If snake is on food then grow snake at end after move and move food to place snake isn't
         
         //move
@@ -55,7 +64,7 @@ public class GameViewModel implements InitializingBean {
         //try grow if possible
     }
     
-    public void end(){
+    public void end() {
     
     }
 }

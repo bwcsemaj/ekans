@@ -96,13 +96,13 @@ public class GameView extends StackPane implements InitializingBean {
         
         //Initialize Key presses
         this.setOnKeyPressed(event->{
-            ObservableList<MoveDirection> moveDirectionRequested = FXCollections.observableArrayList();
-            switch (event.getCode()) {
-                case UP -> moveDirectionRequested.add(MoveDirection.UP);
-                case DOWN -> moveDirectionRequested.add(MoveDirection.DOWN);
-                case LEFT -> moveDirectionRequested.add(MoveDirection.LEFT);
-                case RIGHT -> moveDirectionRequested.add(MoveDirection.RIGHT);
-            }
+            MoveDirection moveDirectionRequested = switch (event.getCode()) {
+                case UP -> MoveDirection.UP;
+                case DOWN -> MoveDirection.DOWN;
+                case LEFT -> MoveDirection.LEFT;
+                case RIGHT -> MoveDirection.RIGHT;
+                default -> null;
+            };
             gameViewModel.moveDirectionRequestProperty().set(moveDirectionRequested);
         });
         
