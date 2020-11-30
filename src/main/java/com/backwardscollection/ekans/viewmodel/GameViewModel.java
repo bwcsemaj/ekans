@@ -2,6 +2,7 @@ package com.backwardscollection.ekans.viewmodel;
 
 import com.backwardscollection.ekans.config.GamePhase;
 import com.backwardscollection.ekans.config.MoveDirection;
+import com.backwardscollection.ekans.utility.EkansUtility;
 import javafx.beans.property.*;
 import lombok.Value;
 import lombok.experimental.Accessors;
@@ -51,7 +52,9 @@ public class GameViewModel implements InitializingBean {
         snakeFX.grow(gridXAmountProperty.get() / 2, gridYAmountProperty.get() / 2);
         
         //Initialize Food
-        foodFX.xProperty().set();
+        //#TODO Fix, need to check if body part is on the cord, cycle cords, total xs/ys, return ones below thres, random fischer
+        foodFX.xProperty().set(EkansUtility.generateRandomIntInRange(gridXAmountProperty.get(), 0));
+        foodFX.yProperty().set(EkansUtility.generateRandomIntInRange(gridYAmountProperty.get(), 0));
     }
     
     public void step() {
