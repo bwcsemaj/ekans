@@ -20,5 +20,6 @@ public class SnakeFX {
     /**
      * Nullary Constructor
      */
-    public SnakeFX(){ }
+    public SnakeFX() {
+    }
 }
