@@ -2,6 +2,8 @@ package com.backwardscollection.ekans.utility;
 
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -31,5 +33,27 @@ public class FXUtility {
                 stage.setY(event.getScreenY() - node.getBoundsInParent().getHeight() / 2);
             }
         });
+    }
+    
+    public static RowConstraints[] createRowConstraints(boolean fill, double... percentages){
+        RowConstraints[] rowConstraints = new RowConstraints[percentages.length];
+        for(int index = 0; percentages.length > index; index++){
+            RowConstraints rowC = new RowConstraints();
+            rowC.fillHeightProperty().set(fill);
+            rowC.setPercentHeight(percentages[index]);
+            rowConstraints[index] = rowC;
+        }
+        return rowConstraints;
+    }
+    
+    public static ColumnConstraints[] createColumnConstraints(boolean fill, double... percentages){
+        ColumnConstraints[] colConstraints = new ColumnConstraints[percentages.length];
+        for(int index = 0; percentages.length > index; index++){
+            ColumnConstraints colC = new ColumnConstraints();
+            colC.fillWidthProperty().set(fill);
+            colC.setPercentWidth(percentages[index]);
+            colConstraints[index] = colC;
+        }
+        return colConstraints;
     }
 }

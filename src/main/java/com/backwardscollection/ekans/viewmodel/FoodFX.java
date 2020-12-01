@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
 public class FoodFX {
     
     //Attributes
-    public static final Color DEFAULT_FOOD_COLOR = Color.GREEN;
+    public static final Color DEFAULT_FOOD_COLOR = Color.YELLOW;
     private final IntegerProperty xProperty = new SimpleIntegerProperty();
     private final IntegerProperty yProperty = new SimpleIntegerProperty();
     private final ObjectProperty<Color> colorProperty = new SimpleObjectProperty<>(DEFAULT_FOOD_COLOR);

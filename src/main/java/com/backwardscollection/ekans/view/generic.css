@@ -22,6 +22,8 @@
     COLOR-20: rgb(13,0,27);
 }
 
-#label{
-    fx-background-color: COLOR-10;
+#arena-content-pane{
+    -fx-background-color: yellow;
+    -fx-border-color: pink;
+    -fx-border-width: 10px;
 }

@@ -38,7 +38,7 @@ public class GameViewModel implements InitializingBean {
             event -> {
                 step();
             }
-    ), new KeyFrame(Duration.millis(500)));
+    ), new KeyFrame(Duration.millis(100)));
     
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -90,6 +90,7 @@ public class GameViewModel implements InitializingBean {
         //Check if game over (if head is on another body part)
         if (gameOver()) {
             phaseProperty.set(GamePhase.END);
+            end();
             return;
         }
         
