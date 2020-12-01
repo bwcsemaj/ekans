@@ -75,7 +75,7 @@ public class GameViewModel implements InitializingBean {
         
         timeline.play();
         log.debug("START");
-    
+        
     }
     
     public void step() {
@@ -86,7 +86,12 @@ public class GameViewModel implements InitializingBean {
         int headY = headBodyPartFX.yProperty().get();
         var foodX = foodFX.xProperty().get();
         var foodY = foodFX.yProperty().get();
-        //Check if game over (if head is on another body part
+        
+        //Check if game over (if head is on another body part)
+        if (gameOver()) {
+            phaseProperty.set(GamePhase.END);
+            return;
+        }
         
         //Try Update last Valid move Direction
         var previousLastValidMove = lastValidMoveDirectionProperty.get();
@@ -110,21 +115,36 @@ public class GameViewModel implements InitializingBean {
                 headX++;
             }
         }
-        int gridX = gridXAmountProperty.get();
-        int gridY = gridYAmountProperty.get();
-        if (headX > gridX || headX < 0 || headY > gridY || headY < 0) {
-            phaseProperty.set(GamePhase.END);
-            return;
-        }
-    
+        
         //If snake is on food then grow snake at end after move and move food to place snake isn't
-        if(headX == foodX && headY == foodY){
+        if (headX == foodX && headY == foodY) {
             snakeFX.grow(headX, headY);
-        }   else{
+        } else {
             snakeFX.move(headX, headY);
         }
         
         
+    }
+    
+    /**
+     * Check if the game is considered over
+     *
+     * @return whether head is out of bounds or head is touching another body part
+     */
+    private boolean gameOver() {
+        var headBodyPartFX = snakeFX.bodyPartsProperty().get(0);
+        int headX = headBodyPartFX.xProperty().get();
+        int headY = headBodyPartFX.yProperty().get();
+        int gridX = gridXAmountProperty.get();
+        int gridY = gridYAmountProperty.get();
+        return headX > gridX || headX < 0 || headY > gridY || headY < 0 ||
+                snakeFX.bodyPartsProperty()
+                        .get()
+                        .stream()
+                        .skip(4) // We don't need to check the head and the next three because it is impossible to touch
+                        .filter(snakeBodyPartFX -> snakeBodyPartFX.xProperty().get() == headBodyPartFX.xProperty().get())
+                        .filter(snakeBodyPartFX -> snakeBodyPartFX.yProperty().get() == headBodyPartFX.yProperty().get())
+                        .count() > 0;
     }
     
     public void end() {
