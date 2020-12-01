@@ -2,8 +2,8 @@ package com.backwardscollection.ekans.view;
 
 import com.backwardscollection.ekans.config.GamePhase;
 import com.backwardscollection.ekans.config.MoveDirection;
-import com.backwardscollection.ekans.utility.FXUtility;
 import com.backwardscollection.ekans.viewmodel.GameViewModel;
+import com.backwardscollection.ekans.viewmodel.SnakeBodyPartFX;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ListProperty;
@@ -104,17 +104,17 @@ public class GameView extends StackPane implements InitializingBean {
         arenaContentPane.setId("arena-content-pane");
         arenaContentPane.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         arenaContentPane.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
-    
+        
         arenaPane = new AnchorPane();
         arenaContentPane.getChildren().add(arenaPane);
-        arenaPane.widthProperty().addListener((obs, oldValue, newValue)->{
+        arenaPane.widthProperty().addListener((obs, oldValue, newValue) -> {
             log.debug("ARENA W{} H{} MW{} MH{}", arenaPane.getWidth(), arenaPane.getHeight(), arenaPane.getMaxWidth(), arenaPane.getMaxHeight());
         });
-        arenaPane.heightProperty().addListener((obs, oldValue, newValue)->{
+        arenaPane.heightProperty().addListener((obs, oldValue, newValue) -> {
             log.debug("ARENA W{} H{} MW{} MH{}", arenaPane.getWidth(), arenaPane.getHeight(), arenaPane.getMaxWidth(), arenaPane.getMaxHeight());
         });
         arenaPane.setId("arena-pane");
-        Platform.runLater(()->{
+        Platform.runLater(() -> {
             arenaPane.maxHeightProperty()
                     .bind(Bindings.min(this.getScene().getWindow().widthProperty().multiply(.8), this.getScene().getWindow().heightProperty().multiply(.8)));
             arenaPane.maxWidthProperty()
@@ -127,26 +127,23 @@ public class GameView extends StackPane implements InitializingBean {
                 var bodyPartPane = new Pane();
                 bodyPartPane.minWidthProperty().bind(arenaPane.maxWidthProperty().divide(gameViewModel.gridXAmountProperty()));
                 bodyPartPane.minHeightProperty().bind(bodyPartPane.minWidthProperty());
-                AnchorPane.setLeftAnchor(bodyPartPane, snakeBodyPartFX.xProperty().get() * bodyPartPane.minWidthProperty().get());
-                AnchorPane.setTopAnchor(bodyPartPane, snakeBodyPartFX.yProperty().get() * bodyPartPane.minHeightProperty().get());
+                repositionSnake(bodyPartPane, snakeBodyPartFX);
                 bodyPartPane.backgroundProperty().bind(Bindings.createObjectBinding(
                         () -> {
                             return new Background(
                                     new BackgroundFill(snakeBodyPartFX.colorProperty().get(), CornerRadii.EMPTY, Insets.EMPTY));
                         }, snakeBodyPartFX.colorProperty()));
                 snakeBodyPartFX.xProperty().addListener((obs, oldValue, newValue) -> {
-                    AnchorPane.setLeftAnchor(bodyPartPane, newValue.doubleValue() * bodyPartPane.minWidthProperty().get());
+                    repositionSnake(bodyPartPane, snakeBodyPartFX);
                 });
                 snakeBodyPartFX.yProperty().addListener((obs, oldValue, newValue) -> {
-                    AnchorPane.setTopAnchor(bodyPartPane, newValue.doubleValue() * bodyPartPane.minHeightProperty().get());
+                    repositionSnake(bodyPartPane, snakeBodyPartFX);
                 });
-                this.getScene().widthProperty().addListener((obs,oldValue, newValue)->{
-                    AnchorPane.setLeftAnchor(bodyPartPane, snakeBodyPartFX.xProperty().doubleValue() * bodyPartPane.minWidthProperty().get());
-                    AnchorPane.setTopAnchor(bodyPartPane, snakeBodyPartFX.xProperty().doubleValue() * bodyPartPane.minHeightProperty().get());
+                this.getScene().widthProperty().addListener((obs, oldValue, newValue) -> {
+                    repositionSnake(bodyPartPane, snakeBodyPartFX);
                 });
-                this.getScene().heightProperty().addListener((obs,oldValue, newValue)->{
-                    AnchorPane.setLeftAnchor(bodyPartPane, snakeBodyPartFX.yProperty().doubleValue() * bodyPartPane.minWidthProperty().get());
-                    AnchorPane.setTopAnchor(bodyPartPane, snakeBodyPartFX.yProperty().doubleValue() * bodyPartPane.minHeightProperty().get());
+                this.getScene().heightProperty().addListener((obs, oldValue, newValue) -> {
+                    repositionSnake(bodyPartPane, snakeBodyPartFX);
                 });
                 return bodyPartPane;
             }).collect(Collectors.toList()));
@@ -156,7 +153,7 @@ public class GameView extends StackPane implements InitializingBean {
             arenaPane.getChildren().add(foodPane);
             arenaPane.getChildren().addAll(snakeNodes);
         });
-
+        
         //Initialize Food
         foodPane = new Pane();
         foodPane.setId("food-pane");
@@ -173,14 +170,14 @@ public class GameView extends StackPane implements InitializingBean {
             return new Background(new BackgroundFill(foodFX.colorProperty().get(), CornerRadii.EMPTY, Insets.EMPTY));
         }, foodFX.colorProperty()));
         foodPane.visibleProperty().bind(foodFX.visibleProperty());
-
+        
         //Add Listeners for changing the Scene Width/Height
-        Platform.runLater(()->{
-            this.getScene().widthProperty().addListener((obs,oldValue, newValue)->{
+        Platform.runLater(() -> {
+            this.getScene().widthProperty().addListener((obs, oldValue, newValue) -> {
                 AnchorPane.setLeftAnchor(foodPane, foodFX.xProperty().doubleValue() * foodPane.minWidthProperty().get());
                 AnchorPane.setTopAnchor(foodPane, foodFX.yProperty().doubleValue() * foodPane.minHeightProperty().get());
             });
-            this.getScene().heightProperty().addListener((obs,oldValue, newValue)->{
+            this.getScene().heightProperty().addListener((obs, oldValue, newValue) -> {
                 AnchorPane.setLeftAnchor(foodPane, foodFX.xProperty().doubleValue() * foodPane.minWidthProperty().get());
                 AnchorPane.setTopAnchor(foodPane, foodFX.yProperty().doubleValue() * foodPane.minHeightProperty().get());
             });
@@ -188,5 +185,25 @@ public class GameView extends StackPane implements InitializingBean {
         
     }
     
-    
+    private void repositionSnake(Pane bodyPartPane, SnakeBodyPartFX snakeBodyPartFX) {
+        double posNewX = snakeBodyPartFX.xProperty().doubleValue() * bodyPartPane.minWidthProperty().get();
+        var snakeSideLength = bodyPartPane.getWidth();
+        if (posNewX < 0) {
+            AnchorPane.setLeftAnchor(bodyPartPane, 0d);
+        } else if (posNewX + snakeSideLength > arenaPane.widthProperty().get()) {
+            AnchorPane.setLeftAnchor(bodyPartPane, arenaPane.widthProperty().get() - snakeSideLength);
+        } else {
+            AnchorPane.setLeftAnchor(bodyPartPane, posNewX);
+        }
+        double posNewY = snakeBodyPartFX.yProperty().doubleValue() * bodyPartPane.minWidthProperty().get();
+        if (posNewY < 0) {
+            AnchorPane.setTopAnchor(bodyPartPane, 0d);
+        } else if (posNewY + snakeSideLength > arenaPane.heightProperty().get()) {
+            AnchorPane.setTopAnchor(bodyPartPane, arenaPane.heightProperty().get() - snakeSideLength);
+        } else {
+            AnchorPane.setTopAnchor(bodyPartPane, posNewY);
+        }
+        
+        log.debug("POSX{} POSY{}", posNewX, posNewY);
+    }
 }

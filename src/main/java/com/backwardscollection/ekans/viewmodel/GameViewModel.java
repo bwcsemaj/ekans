@@ -38,7 +38,7 @@ public class GameViewModel implements InitializingBean {
             event -> {
                 step();
             }
-    ), new KeyFrame(Duration.millis(100)));
+    ), new KeyFrame(Duration.millis(120)));
     
     @Override
     public void afterPropertiesSet() throws Exception {
