@@ -61,13 +61,6 @@ public class GameViewModel implements InitializingBean {
         //Have timeline go indefinitely
         timeline.setCycleCount(Animation.INDEFINITE);
         
-        //Add listener to move direction request to capture last valid request
-        moveDirectionRequestProperty.addListener((obs, oldValue, newValue) -> {
-            if (newValue != null) {
-                lastValidMoveDirectionProperty.set(moveDirectionRequestProperty.get());
-            }
-        });
-        
     }
     
     public void start() {
@@ -94,6 +87,13 @@ public class GameViewModel implements InitializingBean {
         var foodX = foodFX.xProperty().get();
         var foodY = foodFX.yProperty().get();
         //Check if game over (if head is on another body part
+        
+        //Try Update last Valid move Direction
+        var previousLastValidMove = lastValidMoveDirectionProperty.get();
+        var moveDirectionRequest = moveDirectionRequestProperty.get();
+        if (moveDirectionRequest != null && moveDirectionRequest.getOpposite() != lastValidMoveDirectionProperty.get()) {
+            lastValidMoveDirectionProperty.set(moveDirectionRequestProperty.get());
+        }
         
         //move
         switch (lastValidMoveDirectionProperty.get()) {
