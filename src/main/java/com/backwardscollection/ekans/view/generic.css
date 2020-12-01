@@ -22,8 +22,29 @@
     COLOR-20: rgb(13,0,27);
 }
 
-#arena-content-pane{
-    -fx-background-color: yellow;
-    -fx-border-color: pink;
-    -fx-border-width: 10px;
+.root{
+    -fx-dark-text-color: COLOR-18;
+    -fx-mid-text-color: COLOR-10;
+    -fx-light-text-color: COLOR-2;
+    -fx-accent: COLOR-17;
+    -fx-default-button: COLOR-15;
+    -fx-font-base:COLOR-2;
+    -fx-text-background-color: COLOR-2;
+    -fx-focus-color: COLOR-3;
+    -fx-faint-focus-color: COLOR-7;/*MIGHT WANT TO MAKE TRANS */
+    -fx-base: COLOR-10;
+    -fx-background-color:COLOR-14;
+}
+
+#arena-pane{
+    -fx-background-color: rgba(255,255,255,.1);
+    -fx-border-color: red;
+    -fx-border-width: 1px;
+}
+
+.content-pane{
+    -fx-background-color: linear-gradient(COLOR-20 0.0%, COLOR-19 50.0%, COLOR-20 100.0%);
+    -fx-hgap: 30.0;
+    -fx-vgap: 30.0;
+    -fx-padding: 30.0;
 }

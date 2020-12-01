@@ -74,7 +74,7 @@ public class GameView extends StackPane implements InitializingBean {
                     default -> null;
                 };
                 log.debug("MOVE{}", moveDirectionRequested);
-                gameViewModel.moveDirectionRequestProperty().set(moveDirectionRequested);
+                gameViewModel.moveDirectionRequestQueProperty().add(moveDirectionRequested);
             });
         });
         
@@ -82,6 +82,7 @@ public class GameView extends StackPane implements InitializingBean {
         contentPane = new StackPane();
         contentPane.getChildren().add(displayLabel);
         this.getChildren().add(contentPane);
+        contentPane.getStyleClass().add("content-pane");
         contentPane.getStylesheets().add(GameView.class.getResource("generic.css").toExternalForm());
     }
     
@@ -186,7 +187,7 @@ public class GameView extends StackPane implements InitializingBean {
     }
     
     private void repositionSnake(Pane bodyPartPane, SnakeBodyPartFX snakeBodyPartFX) {
-        double posNewX = snakeBodyPartFX.xProperty().doubleValue() * bodyPartPane.minWidthProperty().get();
+        double posNewX = snakeBodyPartFX.xProperty().get() * bodyPartPane.minWidthProperty().get();
         var snakeSideLength = bodyPartPane.getWidth();
         if (posNewX < 0) {
             AnchorPane.setLeftAnchor(bodyPartPane, 0d);
@@ -195,7 +196,7 @@ public class GameView extends StackPane implements InitializingBean {
         } else {
             AnchorPane.setLeftAnchor(bodyPartPane, posNewX);
         }
-        double posNewY = snakeBodyPartFX.yProperty().doubleValue() * bodyPartPane.minWidthProperty().get();
+        double posNewY = snakeBodyPartFX.yProperty().get() * bodyPartPane.minWidthProperty().get();
         if (posNewY < 0) {
             AnchorPane.setTopAnchor(bodyPartPane, 0d);
         } else if (posNewY + snakeSideLength > arenaPane.heightProperty().get()) {

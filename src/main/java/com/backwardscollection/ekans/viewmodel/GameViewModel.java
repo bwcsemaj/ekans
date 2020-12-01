@@ -7,6 +7,7 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
 import javafx.util.Duration;
 import lombok.Value;
 import lombok.experimental.Accessors;
@@ -20,8 +21,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class GameViewModel implements InitializingBean {
     
-    private final IntegerProperty gridXAmountProperty = new SimpleIntegerProperty(30);
-    private final IntegerProperty gridYAmountProperty = new SimpleIntegerProperty(30);
+    private final IntegerProperty gridXAmountProperty = new SimpleIntegerProperty(20);
+    private final IntegerProperty gridYAmountProperty = new SimpleIntegerProperty(20);
     
     
     private final SnakeFX snakeFX = new SnakeFX();
@@ -30,7 +31,7 @@ public class GameViewModel implements InitializingBean {
     private final LongProperty startTimeProperty = new SimpleLongProperty(-1);
     private final IntegerProperty pointsProperty = new SimpleIntegerProperty();
     
-    private final ObjectProperty<MoveDirection> moveDirectionRequestProperty = new SimpleObjectProperty<>();
+    private final ListProperty<MoveDirection> moveDirectionRequestQueProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
     private final ObjectProperty<MoveDirection> lastValidMoveDirectionProperty = new SimpleObjectProperty<>(MoveDirection.RIGHT);
     
     //Set up Time Line
@@ -38,7 +39,7 @@ public class GameViewModel implements InitializingBean {
             event -> {
                 step();
             }
-    ), new KeyFrame(Duration.millis(120)));
+    ), new KeyFrame(Duration.millis(200)));
     
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -96,9 +97,13 @@ public class GameViewModel implements InitializingBean {
         
         //Try Update last Valid move Direction
         var previousLastValidMove = lastValidMoveDirectionProperty.get();
-        var moveDirectionRequest = moveDirectionRequestProperty.get();
+        
+        MoveDirection moveDirectionRequest = null;
+        if(moveDirectionRequestQueProperty.size() > 0){
+            moveDirectionRequest = moveDirectionRequestQueProperty.remove(0);
+        }
         if (moveDirectionRequest != null && moveDirectionRequest.getOpposite() != lastValidMoveDirectionProperty.get()) {
-            lastValidMoveDirectionProperty.set(moveDirectionRequestProperty.get());
+            lastValidMoveDirectionProperty.set(moveDirectionRequest);
         }
         
         //move

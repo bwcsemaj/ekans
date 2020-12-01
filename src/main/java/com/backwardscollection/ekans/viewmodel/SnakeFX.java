@@ -49,7 +49,7 @@ public class SnakeFX {
     
     public void grow(int x, int y) {
         if (bodyPartsProperty.size() == 0) {
-            bodyPartsProperty.add(new SnakeBodyPartFX(bodyPartsProperty.size(), Color.BLACK, x, y));
+            bodyPartsProperty.add(new SnakeBodyPartFX(bodyPartsProperty.size(), Color.color(1,1,1,1), x, y));
         } else {
             bodyPartsProperty.add(new SnakeBodyPartFX(bodyPartsProperty.size(),
                     DEFAULT_COLORS[bodyPartsProperty.size() % DEFAULT_COLORS.length],
