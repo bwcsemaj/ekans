@@ -203,7 +203,5 @@ public class GameView extends StackPane implements InitializingBean {
         } else {
             AnchorPane.setTopAnchor(bodyPartPane, posNewY);
         }
-        
-        log.debug("POSX{} POSY{}", posNewX, posNewY);
     }
 }
