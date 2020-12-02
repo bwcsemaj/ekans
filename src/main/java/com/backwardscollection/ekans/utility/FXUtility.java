@@ -12,31 +12,12 @@ import javafx.stage.Stage;
 
 public class FXUtility {
     
-    
-    
     /**
-     * Make a Node be able to move the "stage"
-     *
-     * @param stage : stage the node will belong to
-     * @param node  : node that will be able to "moveable"
+     * Creates an array of RowConstraints given contstraints
+     * @param fill : whether items in row should be fill the space
+     * @param percentages : row percentages where index corresponds to row
+     * @return an RowConstraints array
      */
-    public static void setMoveControl(Stage stage, Node node) {
-        node.setOnDragDetected((event) -> {
-            node.startFullDrag();
-        });
-        node.setOnMouseDragged((event) -> {
-            if (event.isPrimaryButtonDown()) {
-                // Local Variables
-                Rectangle2D screen = Screen.getScreensForRectangle(event.getScreenX(), event.getScreenY(), 1, 1)
-                        .get(0).getVisualBounds();
-                // If the mouse is a certain distance a way and it is snapped, unsnap and make size previous
-                int x = (int) stage.getX();
-                stage.setX(event.getScreenX() - stage.getWidth() / 2);
-                stage.setY(event.getScreenY() - node.getBoundsInParent().getHeight() / 2);
-            }
-        });
-    }
-    
     public static RowConstraints[] createRowConstraints(boolean fill, double... percentages){
         RowConstraints[] rowConstraints = new RowConstraints[percentages.length];
         for(int index = 0; percentages.length > index; index++){
@@ -48,6 +29,12 @@ public class FXUtility {
         return rowConstraints;
     }
     
+    /**
+     * Creates an array of ColumnConstraints given contstraints
+     * @param fill : whether items in row should be fill the space
+     * @param percentages : column percentages where index corresponds to column
+     * @return an ColumnConstraints array
+     */
     public static ColumnConstraints[] createColumnConstraints(boolean fill, double... percentages){
         ColumnConstraints[] colConstraints = new ColumnConstraints[percentages.length];
         for(int index = 0; percentages.length > index; index++){
@@ -59,6 +46,11 @@ public class FXUtility {
         return colConstraints;
     }
     
+    /**
+     * Makes given nodes able to grow as much as possible inside of a GridPane
+     * @param nodes : nodes to grow
+     * @return same nodes
+     */
     public static Node[] maxGrid(Region... nodes){
         for(Region region : nodes){
             region.setMinSize(0, 0);
@@ -75,6 +67,13 @@ public class FXUtility {
     
     public static String FONT_FAMILY = "Monospace";
     
+    /**
+     * Determines the maximum font size given String and length requirements
+     * @param text : String value
+     * @param width : width of the area
+     * @param height : height of the area
+     * @return maximum size of font
+     */
     public static double determineFontSize(String text, double width, double height){
         Text textNode = new Text(text);
         textNode.setFont(Font.font(FONT_FAMILY, FontWeight.MEDIUM, textNode.getFont().getSize()));
@@ -82,17 +81,11 @@ public class FXUtility {
         double fontSize = textNode.getFont().getSize();
         double stringWidth = textNode.getLayoutBounds().getWidth();
         
-        // String Variables needed
-        String stringText = text;
-        if(stringText == null){
-            stringText = new String("");
-        }
-        
         // Find out how much the font can grow in width.
         double widthRatio = (double) width / (double) stringWidth;
         double newFontSize = (fontSize * widthRatio);
         
-        // #TODO Instead of subtracting 5 might want to passin the baseline offset also
+        // Instead of subtracting 5 might want to passin the baseline offset also
         // And apply that number to determining the fontSizeToUse
         double fontSizeToUse = Math.min(newFontSize, height - 5);
         if(fontSizeToUse <= 0){
