@@ -27,6 +27,10 @@ public class SnakeDriver extends Application implements CommandLineRunner {
     private static final int INITIAL_HEIGHT = 500;
     private static Stage stage;
     
+    public static void main(String[] args) {
+        launch(args);
+    }
+    
     @Override
     public void start(Stage primaryStage) throws Exception {
         this.stage = primaryStage;
