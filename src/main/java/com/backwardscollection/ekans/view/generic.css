@@ -37,8 +37,17 @@
 }
 
 #logo-button {
-    -fx-effect: dropshadow(gaussian, white, 50, 10, 0, 0);
+    -fx-effect: dropshadow(two-pass-box, rgba(0, 0, 0, .4), 25, .5, 0, 0);
 }
+
+#logo-button:hover:pressed {
+    -fx-effect: dropshadow(two-pass-box, rgba(255, 255, 255, .4), 25, .5, 0, 0);
+}
+
+#logo-button:hover {
+    -fx-effect: dropshadow(two-pass-box, rgb(16, 35, 206), 25, .5, 0, 0);
+}
+
 
 #arena-pane {
     -fx-background-color: rgba(255, 255, 255, .1);
