@@ -49,8 +49,8 @@ Game Play
 
 ![gameplay](ekans.gif)
 
-Tips
-----
+Tips Making a Snake Game
+-------------------------
 * Paint or have nodes unmanaged to make things easier
 * Use fixed sizes for things and rather scale whole project together than individually
 * I liked move que however it may need more work to allow buttons being held down while pressing others
