@@ -27,7 +27,7 @@
     <appender-ref ref="STDOUT" />                                                                                                                                                                                                             
   </root>   
 
-	<logger name="com.backwardscollection" level="debug"/>
+	<logger name="com.backwardscollection" level="info"/>
 
   
   </configuration> 
