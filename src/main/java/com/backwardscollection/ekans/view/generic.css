@@ -48,3 +48,18 @@
     -fx-vgap: 30.0;
     -fx-padding: 30.0;
 }
+
+#snake-head-pane{
+    -fx-background-color: white,
+    radial-gradient(focus-angle 45.0deg, focus-distance 50.0%, center 0.0% 0.0% , radius 35.0%, COLOR-20, transparent),
+    radial-gradient(focus-angle 135.0deg, focus-distance 50.0%, center 100.0% 0.0% , radius 35.0%, COLOR-20, transparent);
+    -fx-background-radius: 26.0 26.0 0.0 0.0;
+    -fx-border-radius: 0.0 0.0 26.0 0.0;
+}
+
+#snake-tail-pane{
+    -fx-background-color: black,
+    linear-gradient(COLOR-20 0.0%, COLOR-19 50.0%, COLOR-20 100.0%);
+    -fx-background-radius: 100.0 100.0 0.0 0.0;
+    -fx-border-radius: 100.0 100.0 0.0 0.0;
+}

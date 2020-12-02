@@ -9,6 +9,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -124,21 +125,24 @@ public class GameView extends StackPane implements InitializingBean {
         });
         arenaPane.setBackground(new Background(new BackgroundFill(Color.MAGENTA, CornerRadii.EMPTY, Insets.EMPTY)));
         snakeNodes.bind(Bindings.createObjectBinding(() -> {
-            return FXCollections.observableArrayList(gameViewModel.snakeFX().bodyPartsProperty().stream().map(snakeBodyPartFX -> {
+            var snakeFX = gameViewModel.snakeFX();
+            if (gameViewModel.snakeFX().bodyPartsProperty().size() == 0) {
+                return FXCollections.emptyObservableList();
+            }
+            ObservableList<Node> bodyParts = FXCollections.observableArrayList(gameViewModel.snakeFX().bodyPartsProperty().stream().map(snakeBodyPartFX -> {
                 var bodyPartPane = new Pane();
                 bodyPartPane.minWidthProperty().bind(arenaPane.maxWidthProperty().divide(gameViewModel.gridXAmountProperty()));
                 bodyPartPane.minHeightProperty().bind(bodyPartPane.minWidthProperty());
                 repositionSnake(bodyPartPane, snakeBodyPartFX);
-                bodyPartPane.backgroundProperty().bind(Bindings.createObjectBinding(
-                        () -> {
-                            return new Background(
-                                    new BackgroundFill(snakeBodyPartFX.colorProperty().get(), CornerRadii.EMPTY, Insets.EMPTY));
-                        }, snakeBodyPartFX.colorProperty()));
+                bodyPartPane.setBackground(new Background(
+                        new BackgroundFill(snakeBodyPartFX.colorProperty().get(), CornerRadii.EMPTY, Insets.EMPTY)));
                 snakeBodyPartFX.xProperty().addListener((obs, oldValue, newValue) -> {
                     repositionSnake(bodyPartPane, snakeBodyPartFX);
+                    tryRotateSnakeBodyPart(newValue.intValue(), oldValue.intValue(), bodyPartPane, 90d, -90d);
                 });
                 snakeBodyPartFX.yProperty().addListener((obs, oldValue, newValue) -> {
                     repositionSnake(bodyPartPane, snakeBodyPartFX);
+                    tryRotateSnakeBodyPart(newValue.intValue(), oldValue.intValue(), bodyPartPane, 180, 0);
                 });
                 this.getScene().widthProperty().addListener((obs, oldValue, newValue) -> {
                     repositionSnake(bodyPartPane, snakeBodyPartFX);
@@ -148,6 +152,15 @@ public class GameView extends StackPane implements InitializingBean {
                 });
                 return bodyPartPane;
             }).collect(Collectors.toList()));
+            
+            if (bodyParts.size() > 0) {
+                bodyParts.get(0).setId("snake-head-pane");
+            }
+            if (bodyParts.size() > 1) {
+                bodyParts.get(bodyParts.size() - 1).setId("snake-tail-pane");
+            }
+            
+            return bodyParts;
         }, gameViewModel.snakeFX().bodyPartsProperty()));
         snakeNodes.addListener((obs, oldValue, newValue) -> {
             arenaPane.getChildren().clear();
@@ -203,6 +216,28 @@ public class GameView extends StackPane implements InitializingBean {
             AnchorPane.setTopAnchor(bodyPartPane, arenaPane.heightProperty().get() - snakeSideLength);
         } else {
             AnchorPane.setTopAnchor(bodyPartPane, posNewY);
+        }
+    }
+    
+    //Up Right = positive rotate
+    //Left Down = negative rotate
+    private void tryRotateSnakeBodyPart(int newValue, int oldValue, Pane bodyPartPane, double positiveRotate, double negativeRotate){
+        if(newValue == oldValue){
+            return;
+        } else if(newValue > oldValue){
+            //Going right
+            if("snake-head-pane".equals(bodyPartPane.idProperty().get())){
+                bodyPartPane.setRotate(positiveRotate);
+            }   else if("snake-tail-pane".equals(bodyPartPane.idProperty().get())){
+                bodyPartPane.setRotate(negativeRotate);
+            }
+            return;
+        }
+        //Going left
+        if("snake-head-pane".equals(bodyPartPane.idProperty().get())){
+            bodyPartPane.setRotate(negativeRotate);
+        }   else if("snake-tail-pane".equals(bodyPartPane.idProperty().get())){
+            bodyPartPane.setRotate(positiveRotate);
         }
     }
 }
