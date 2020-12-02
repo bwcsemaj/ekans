@@ -1,7 +1,10 @@
 package com.backwardscollection.ekans.utility;
 
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -9,6 +12,10 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
 
 public class FXUtility {
     
@@ -93,5 +100,25 @@ public class FXUtility {
         }
         
         return fontSizeToUse;
+    }
+    
+    /**
+     * Saves the Node image to a file
+     * @param node     : Node to be saved to file
+     * @param fileName : File path
+     */
+    public static void saveAsPng(Node node, String fileName){
+        SnapshotParameters params = new SnapshotParameters();
+        params.setFill(Color.TRANSPARENT);
+        WritableImage image = node.snapshot(params, null);
+        
+        // TODO: probably use a file chooser here
+        File file = new File(fileName);
+        
+        try{
+            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+        } catch(IOException e){
+            // TODO: handle exception here
+        }
     }
 }

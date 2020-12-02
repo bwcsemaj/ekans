@@ -23,6 +23,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,7 +137,7 @@ public class GameView extends StackPane implements InitializingBean {
     }
     
     private GridPane logoContentPane;
-    private Button logoButton;
+    @Getter private Button logoButton;
     private ScaleTransition scaleTransition;
     
     private void initLogoButton() {
@@ -147,29 +148,29 @@ public class GameView extends StackPane implements InitializingBean {
         logoContentPane.getColumnConstraints().addAll(FXUtility.createColumnConstraints(true, 25, 25, 25, 25, 25, 25, 25, 25));
         
         //Top
-        double rotate = -90;
+        double rotate = 90;
         var snakeLogoPanes = createSnakeLogoPanes(rotate);
         for (int index = 0; snakeLogoPanes.size() > index; index++) {
             logoContentPane.add(snakeLogoPanes.get(index), index, 0);
         }
-        
+    
         //Right
-        rotate *= 2;
+        rotate = 180;
         snakeLogoPanes = createSnakeLogoPanes(rotate);
         for (int index = 0; snakeLogoPanes.size() > index; index++) {
             logoContentPane.add(snakeLogoPanes.get(index), snakeLogoPanes.size(), index);
         }
-        
+    
         //Bottom
-        rotate *= 2;
+        rotate = 270;
         snakeLogoPanes = createSnakeLogoPanes(rotate);
         var index = 0;
         for (int column = snakeLogoPanes.size(); column > 0; column--, index++) {
             logoContentPane.add(snakeLogoPanes.get(index), column, snakeLogoPanes.size());
         }
-        
+    
         //Left
-        rotate *= 2;
+        rotate = 0;
         snakeLogoPanes = createSnakeLogoPanes(rotate);
         index = 0;
         for (int row = snakeLogoPanes.size(); row > 0; row--, index++) {
@@ -228,10 +229,11 @@ public class GameView extends StackPane implements InitializingBean {
             snakeLogoPanes.add(snakePane);
             snakePane.setId(String.format("snake-logo-%d", index));
         }
-        snakeLogoPanes.get(0).setId("snake-head-pane");
+        var snakeHeadPane = snakeLogoPanes.get(0);
+        snakeHeadPane.setId("snake-head-pane");
+        snakeHeadPane.setRotate(rotate);
         var snakeTailPane = snakeLogoPanes.get(snakeLogoPanes.size() - 1);
         snakeTailPane.setId("snake-tail-pane");
-        snakeTailPane.setRotate(rotate);
         Collections.reverse(snakeLogoPanes);
         return snakeLogoPanes;
     }
