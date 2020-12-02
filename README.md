@@ -44,4 +44,4 @@ You can also fork my project, for your run configuration you will need to add th
 Game Play
 ---------
 
-![gameplay](https://imgur.com/a/0Ab7Esx)
+![gameplay](https://imgur.com/a/0Ab7Esx.gif)
