@@ -76,6 +76,7 @@ public class GameView extends StackPane implements InitializingBean {
         gameContentPane.setTop(topTextHolder);
         topText.setId("top-text");
         
+        //Initialize Bottom Text
         var bottomTextHolder = new StackPane();
         bottomTextHolder.visibleProperty().bind(gameViewModel.phaseProperty().isEqualTo(GamePhase.END));
         bottomText = new Text("RETURN");
@@ -123,7 +124,6 @@ public class GameView extends StackPane implements InitializingBean {
                     case RIGHT -> Direction.RIGHT;
                     default -> null;
                 };
-                log.debug("MOVE{}", directionRequested);
                 gameViewModel.directionRequestQueProperty().add(directionRequested);
             });
         });
@@ -188,7 +188,6 @@ public class GameView extends StackPane implements InitializingBean {
                 foodPane.setId("food-pane");
                 foodPane.backgroundProperty().bind(Bindings.createObjectBinding(()->{
                     Color color;
-                    log.debug("P{} H{}", logoButton.isHover(), logoButton.isPressed());
                     if(logoButton.isPressed()){
                         color = Color.PURPLE;
                     }   else if(logoButton.isHover()){

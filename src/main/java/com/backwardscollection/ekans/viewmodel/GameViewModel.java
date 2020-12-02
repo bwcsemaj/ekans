@@ -53,7 +53,6 @@ public class GameViewModel implements InitializingBean {
                 }
                 case PLAY -> {
                     start();
-                    log.debug("PLAY");
                 }
                 case END -> {
                     end();
@@ -75,8 +74,6 @@ public class GameViewModel implements InitializingBean {
         moveFood();
         
         timeline.play();
-        log.debug("START");
-        
     }
     
     /**
@@ -108,7 +105,6 @@ public class GameViewModel implements InitializingBean {
             newFoodCellNumber = gridBitSet.nextSetBit(newFoodCellNumber + 1);
             random--;
         }
-        log.debug("{}", newFoodCellNumber);
         var foodX = newFoodCellNumber % GRID_LENGTH;
         var foodY = newFoodCellNumber / GRID_LENGTH;
         foodFX.xProperty().set(foodX);
