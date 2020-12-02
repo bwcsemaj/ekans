@@ -22,7 +22,7 @@ Who plays EKANS?
 
 Features
 ---------
-* Ability to move snake using UP DOWN RIGHT LEFT
+* Ability to move snake using UP DOWN RIGHT LEFT (also WASD)
 * System keeps track of score (length of the snake)
 * Que up valid moves ahead of time to make handling the snake more intuitive.
 
