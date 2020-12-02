@@ -63,7 +63,7 @@
 }
 
 #snake-head-pane {
-    -fx-background-color: rgb(255, 242, 255),
+    -fx-background-color: COLOR-0,
     radial-gradient(focus-angle 45.0deg, focus-distance 50.0%, center 0.0% 0.0%, radius 35.0%, COLOR-20, transparent),
     radial-gradient(focus-angle 135.0deg, focus-distance 50.0%, center 100.0% 0.0%, radius 35.0%, COLOR-20, transparent);
 }

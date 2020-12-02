@@ -4,6 +4,9 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -68,5 +71,34 @@ public class FXUtility {
             GridPane.setFillWidth(node, true);
         }
         return nodes;
+    }
+    
+    public static String FONT_FAMILY = "Monospace";
+    
+    public static double determineFontSize(String text, double width, double height){
+        Text textNode = new Text(text);
+        textNode.setFont(Font.font(FONT_FAMILY, FontWeight.MEDIUM, textNode.getFont().getSize()));
+        // textNode.setFont(currentFont);
+        double fontSize = textNode.getFont().getSize();
+        double stringWidth = textNode.getLayoutBounds().getWidth();
+        
+        // String Variables needed
+        String stringText = text;
+        if(stringText == null){
+            stringText = new String("");
+        }
+        
+        // Find out how much the font can grow in width.
+        double widthRatio = (double) width / (double) stringWidth;
+        double newFontSize = (fontSize * widthRatio);
+        
+        // #TODO Instead of subtracting 5 might want to passin the baseline offset also
+        // And apply that number to determining the fontSizeToUse
+        double fontSizeToUse = Math.min(newFontSize, height - 5);
+        if(fontSizeToUse <= 0){
+            return 1;
+        }
+        
+        return fontSizeToUse;
     }
 }

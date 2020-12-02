@@ -15,14 +15,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
+import java.util.BitSet;
+
 @Slf4j
 @Accessors(fluent = true)
 @Value
 @Component
 public class GameViewModel implements InitializingBean {
     
-    private final IntegerProperty gridXAmountProperty = new SimpleIntegerProperty(20);
-    private final IntegerProperty gridYAmountProperty = new SimpleIntegerProperty(20);
+    private static final int GRID_LENGTH = 20;
+    private final IntegerProperty gridLengthProperty = new SimpleIntegerProperty(GRID_LENGTH);
     
     
     private final SnakeFX snakeFX = new SnakeFX();
@@ -67,20 +69,54 @@ public class GameViewModel implements InitializingBean {
     public void start() {
         //Initialize Snake
         snakeFX.bodyPartsProperty().clear();
-        snakeFX.grow(gridXAmountProperty.get() / 2, gridYAmountProperty.get() / 2);
+        snakeFX.grow(GRID_LENGTH / 2, GRID_LENGTH / 2);
         
         //Initialize Food
-        //#TODO Fix, need to check if body part is on the cord, cycle cords, total xs/ys, return ones below thres, random fischer
-        foodFX.xProperty().set(EkansUtility.generateRandomIntInRange(gridXAmountProperty.get(), 0));
-        foodFX.yProperty().set(EkansUtility.generateRandomIntInRange(gridYAmountProperty.get(), 0));
+        moveFood();
         
         timeline.play();
         log.debug("START");
         
     }
     
+    /**
+     * Move food to a open spot
+     * An open spot means a spot inside the grid that snake is not on
+     * to determine this spot best way is to convert the grid to a single numeric system
+     * y*(gridYSize) + x = cellNumber
+     * totalCells = gridYSize*gridXSize
+     * to make things really easy we'll just use a BitSet, false = notOpenCell true = openCell
+     * than generate a random integer from 0 to cardinal (number of cells left) cycling through BitSet
+     * we will assume when new game is started bitset is reset
+     */
+    private BitSet gridBitSet = new BitSet(GRID_LENGTH * GRID_LENGTH);
+    
+    public void moveFood() {
+        //Reset BitSet to all open
+        gridBitSet.set(0, GRID_LENGTH * GRID_LENGTH);
+        
+        // Cycle through snake body parts and set cells empty
+        snakeFX.bodyPartsProperty().forEach(bodyPartFX -> {
+            var cellNumber = bodyPartFX.yProperty().get() * GRID_LENGTH + bodyPartFX.xProperty().get();
+            gridBitSet.clear(cellNumber);
+        });
+        
+        // Generate random cell number
+        var random = EkansUtility.generateRandomIntInRange(gridBitSet.cardinality(), 0);
+        int newFoodCellNumber = 0;
+        while (random > 0) {
+            newFoodCellNumber = gridBitSet.nextSetBit(newFoodCellNumber + 1);
+            random--;
+        }
+        log.debug("{}", newFoodCellNumber);
+        var foodX = newFoodCellNumber % GRID_LENGTH;
+        var foodY = newFoodCellNumber / GRID_LENGTH;
+        foodFX.xProperty().set(foodX);
+        foodFX.yProperty().set(foodY);
+    }
+    
+    
     public void step() {
-        log.debug("STEP");
         //local variables
         var headBodyPartFX = snakeFX.bodyPartsProperty().get(0);
         int headX = headBodyPartFX.xProperty().get();
@@ -99,7 +135,7 @@ public class GameViewModel implements InitializingBean {
         var previousLastValidMove = lastValidMoveDirectionProperty.get();
         
         MoveDirection moveDirectionRequest = null;
-        if(moveDirectionRequestQueProperty.size() > 0){
+        if (moveDirectionRequestQueProperty.size() > 0) {
             moveDirectionRequest = moveDirectionRequestQueProperty.remove(0);
         }
         if (moveDirectionRequest != null && moveDirectionRequest.getOpposite() != lastValidMoveDirectionProperty.get()) {
@@ -125,6 +161,7 @@ public class GameViewModel implements InitializingBean {
         //If snake is on food then grow snake at end after move and move food to place snake isn't
         if (headX == foodX && headY == foodY) {
             snakeFX.grow(headX, headY);
+            moveFood();
         } else {
             snakeFX.move(headX, headY);
         }
@@ -135,15 +172,15 @@ public class GameViewModel implements InitializingBean {
     /**
      * Check if the game is considered over
      *
-     * @return whether head is out of bounds or head is touching another body part
+     * @return whether head is out of bounds or head is touching another body part or no more spots left for food to go
      */
     private boolean gameOver() {
         var headBodyPartFX = snakeFX.bodyPartsProperty().get(0);
         int headX = headBodyPartFX.xProperty().get();
         int headY = headBodyPartFX.yProperty().get();
-        int gridX = gridXAmountProperty.get();
-        int gridY = gridYAmountProperty.get();
-        return headX > gridX || headX < 0 || headY > gridY || headY < 0 ||
+        int gridX = GRID_LENGTH;
+        int gridY = GRID_LENGTH;
+        return headX > gridX || headX < 0 || headY > gridY || headY < 0 || gridBitSet.cardinality() == 0 ||
                 snakeFX.bodyPartsProperty()
                         .get()
                         .stream()

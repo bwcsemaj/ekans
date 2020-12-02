@@ -34,6 +34,7 @@ public class SnakeDriver extends Application implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         primaryStage.setScene(new Scene(gameView, 500, 500));
+        primaryStage.setTitle("ekans");
         primaryStage.show();
         primaryStage.setOnCloseRequest((event) -> System.exit(1));
         primaryStage.centerOnScreen();

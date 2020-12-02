@@ -135,8 +135,6 @@ public class GameView extends StackPane implements InitializingBean {
             }
             index++;
         }
-    
-       
         
         logoButton = new Button();
         scaleTransition = new ScaleTransition(Duration.millis(10000), logoButton);
@@ -147,9 +145,9 @@ public class GameView extends StackPane implements InitializingBean {
         logoButton.getStyleClass().clear();
         Platform.runLater(() -> {
             logoButton.prefHeightProperty()
-                    .bind(Bindings.min(this.getScene().getWindow().widthProperty().multiply(.6), this.getScene().getWindow().heightProperty().multiply(.6)));
+                    .bind(Bindings.min(this.getScene().getWindow().widthProperty().multiply(.2), this.getScene().getWindow().heightProperty().multiply(.2)));
             logoButton.prefWidthProperty()
-                    .bind(Bindings.min(this.getScene().getWindow().widthProperty().multiply(.6), this.getScene().getWindow().heightProperty().multiply(.6)));
+                    .bind(Bindings.min(this.getScene().getWindow().widthProperty().multiply(.2), this.getScene().getWindow().heightProperty().multiply(.2)));
         });
         logoButton.setGraphic(logoContentPane);
         logoButton.setId("logo-button");
@@ -178,6 +176,8 @@ public class GameView extends StackPane implements InitializingBean {
             arenaPane.maxWidthProperty()
                     .bind(Bindings.min(this.getScene().getWindow().widthProperty().multiply(.6), this.getScene().getWindow().heightProperty().multiply(.6)));
             arenaPane.prefWidthProperty().bind(arenaPane.maxWidthProperty());
+            arenaPane.minWidthProperty().bind(arenaPane.maxWidthProperty());
+            arenaPane.minHeightProperty().bind(arenaPane.maxHeightProperty());
         });
         arenaPane.setBackground(new Background(new BackgroundFill(Color.MAGENTA, CornerRadii.EMPTY, Insets.EMPTY)));
         snakeNodes.bind(Bindings.createObjectBinding(() -> {
@@ -187,7 +187,7 @@ public class GameView extends StackPane implements InitializingBean {
             }
             ObservableList<Node> bodyParts = FXCollections.observableArrayList(gameViewModel.snakeFX().bodyPartsProperty().stream().map(snakeBodyPartFX -> {
                 var bodyPartPane = new Pane();
-                bodyPartPane.minWidthProperty().bind(arenaPane.maxWidthProperty().divide(gameViewModel.gridXAmountProperty()));
+                bodyPartPane.minWidthProperty().bind(arenaPane.maxWidthProperty().divide(gameViewModel.gridLengthProperty()));
                 bodyPartPane.minHeightProperty().bind(bodyPartPane.minWidthProperty());
                 repositionSnake(bodyPartPane, snakeBodyPartFX);
                 bodyPartPane.setBackground(new Background(
@@ -227,7 +227,7 @@ public class GameView extends StackPane implements InitializingBean {
         //Initialize Food
         foodPane = new Pane();
         foodPane.setId("food-pane");
-        foodPane.minWidthProperty().bind(arenaPane.maxWidthProperty().divide(gameViewModel.gridXAmountProperty()));
+        foodPane.minWidthProperty().bind(arenaPane.maxWidthProperty().divide(gameViewModel.gridLengthProperty()));
         foodPane.minHeightProperty().bind(foodPane.minWidthProperty());
         var foodFX = gameViewModel.foodFX();
         foodFX.xProperty().addListener((obs, oldValue, newValue) -> {
