@@ -56,3 +56,9 @@ Tips
 * I liked move que however it may need more work to allow buttons being held down while pressing others
 * Snake body parts implementation is not efficient but I did find it elegant on how I updated body parts
 * Grid system that doesn't relate directly to view I enjoyed
+
+Technologies
+------------
+* Language: Java
+* Library: JavaFX (with css)
+* Framework: SpringBoot (starter)
