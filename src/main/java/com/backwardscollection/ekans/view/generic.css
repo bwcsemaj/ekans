@@ -112,3 +112,6 @@
 #bottom-text:hover {
     -fx-effect: dropshadow(two-pass-box, rgb(16, 35, 206), 25, .5, 0, 0);
 }
+
+#food-pane{
+}

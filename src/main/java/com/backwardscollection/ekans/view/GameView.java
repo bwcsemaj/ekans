@@ -29,6 +29,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -72,11 +74,11 @@ public class GameView extends StackPane implements InitializingBean {
         topTextHolder.getChildren().add(topText);
         gameContentPane.setTop(topTextHolder);
         topText.setId("top-text");
-    
+        
         var bottomTextHolder = new StackPane();
         bottomTextHolder.visibleProperty().bind(gameViewModel.phaseProperty().isEqualTo(GamePhase.END));
         bottomText = new Text("RETURN");
-        bottomText.setOnMouseReleased(event->{
+        bottomText.setOnMouseReleased(event -> {
             gameViewModel.returnToMenu();
         });
         bottomText.setTextAlignment(TextAlignment.CENTER);
@@ -140,40 +142,65 @@ public class GameView extends StackPane implements InitializingBean {
     private void initLogoButton() {
         //Content Pane
         logoContentPane = new GridPane();
-        logoContentPane.getRowConstraints().addAll(FXUtility.createRowConstraints(true, 25, 25, 25, 25));
-        logoContentPane.getColumnConstraints().addAll(FXUtility.createColumnConstraints(true, 25, 25, 25, 25));
+        logoContentPane.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
+        logoContentPane.getRowConstraints().addAll(FXUtility.createRowConstraints(true, 25, 25, 25, 25, 25, 25, 25, 25));
+        logoContentPane.getColumnConstraints().addAll(FXUtility.createColumnConstraints(true, 25, 25, 25, 25, 25, 25, 25, 25));
         
-        var snakeLogoPanes = new ArrayList<Pane>();
-        for (int index = 0; 7 > index; index++) {
-            var snakePane = new Pane();
-            FXUtility.maxGrid(snakePane);
-            snakeLogoPanes.add(snakePane);
-            snakePane.setId(String.format("snake-logo-%d", index));
-        }
-        snakeLogoPanes.get(0).setId("snake-head-pane");
-        var snakeTailPane = snakeLogoPanes.get(snakeLogoPanes.size() - 1);
-        snakeTailPane.setId("snake-tail-pane");
-        snakeTailPane.setRotate(-90);
-        
-        //Add to content pane in a zig zag way
-        int index = 0;
-        int x = 3;
-        int y = 0;
-        boolean down = true;
-        while (x >= 0 && index < 7) {
-            logoContentPane.add(snakeLogoPanes.get(index), x, y);
-            log.debug("I{} X{} Y{} {}", index, x, y, snakeLogoPanes.get(index).getId());
-            if (down) {
-                y++;
-                down = false;
-            } else {
-                x--;
-                down = true;
-            }
-            index++;
+        //Top
+        double rotate = -90;
+        var snakeLogoPanes = createSnakeLogoPanes(rotate);
+        for (int index = 0; snakeLogoPanes.size() > index; index++) {
+            logoContentPane.add(snakeLogoPanes.get(index), index, 0);
         }
         
+        //Right
+        rotate *= 2;
+        snakeLogoPanes = createSnakeLogoPanes(rotate);
+        for (int index = 0; snakeLogoPanes.size() > index; index++) {
+            logoContentPane.add(snakeLogoPanes.get(index), snakeLogoPanes.size(), index);
+        }
+        
+        //Bottom
+        rotate *= 2;
+        snakeLogoPanes = createSnakeLogoPanes(rotate);
+        var index = 0;
+        for (int column = snakeLogoPanes.size(); column > 0; column--, index++) {
+            logoContentPane.add(snakeLogoPanes.get(index), column, snakeLogoPanes.size());
+        }
+        
+        //Left
+        rotate *= 2;
+        snakeLogoPanes = createSnakeLogoPanes(rotate);
+        index = 0;
+        for (int row = snakeLogoPanes.size(); row > 0; row--, index++) {
+            logoContentPane.add(snakeLogoPanes.get(index), 0, row);
+        }
+    
+        //Start Logo
         logoButton = new Button();
+        
+        //Food Very middle
+        for(int col = 3; 4 >= col; col++){
+            for(int row = 3; 4 >= row; row++){
+                var foodPane = new Pane();
+                FXUtility.maxGrid(foodPane);
+                foodPane.setId("food-pane");
+                foodPane.backgroundProperty().bind(Bindings.createObjectBinding(()->{
+                    Color color;
+                    log.debug("P{} H{}", logoButton.isHover(), logoButton.isPressed());
+                    if(logoButton.isPressed()){
+                        color = Color.PURPLE;
+                    }   else if(logoButton.isHover()){
+                        color = Color.MAGENTA;
+                    }   else{
+                        color = Color.YELLOW;
+                    }
+                    return new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY));
+                }, logoButton.hoverProperty(), logoButton.pressedProperty()));
+                logoContentPane.add(foodPane, col, row);
+            }
+        }
+        
         scaleTransition = new ScaleTransition(Duration.millis(10000), logoButton);
         scaleTransition.setToX(1.5f);
         scaleTransition.setToY(1.5f);
@@ -191,6 +218,22 @@ public class GameView extends StackPane implements InitializingBean {
         logoButton.setOnAction(event -> {
             gameViewModel.phaseProperty().set(GamePhase.PLAY);
         });
+    }
+    
+    private List<Pane> createSnakeLogoPanes(double rotate) {
+        var snakeLogoPanes = new ArrayList<Pane>();
+        for (int index = 0; 7 > index; index++) {
+            var snakePane = new Pane();
+            FXUtility.maxGrid(snakePane);
+            snakeLogoPanes.add(snakePane);
+            snakePane.setId(String.format("snake-logo-%d", index));
+        }
+        snakeLogoPanes.get(0).setId("snake-head-pane");
+        var snakeTailPane = snakeLogoPanes.get(snakeLogoPanes.size() - 1);
+        snakeTailPane.setId("snake-tail-pane");
+        snakeTailPane.setRotate(rotate);
+        Collections.reverse(snakeLogoPanes);
+        return snakeLogoPanes;
     }
     
     private StackPane arenaContentPane;
