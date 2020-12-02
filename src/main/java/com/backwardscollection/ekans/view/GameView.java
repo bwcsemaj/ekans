@@ -5,6 +5,8 @@ import com.backwardscollection.ekans.config.MoveDirection;
 import com.backwardscollection.ekans.utility.FXUtility;
 import com.backwardscollection.ekans.viewmodel.GameViewModel;
 import com.backwardscollection.ekans.viewmodel.SnakeBodyPartFX;
+import javafx.animation.ScaleTransition;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ListProperty;
@@ -15,14 +17,18 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Component
@@ -56,9 +62,11 @@ public class GameView extends StackPane implements InitializingBean {
             
             switch (phase) {
                 case MAIN_MENU -> {
+                    scaleTransition.play();
                     return logoButton;
                 }
                 case PLAY, END -> {
+                    scaleTransition.stop();
                     return arenaContentPane;
                 }
             }
@@ -90,6 +98,7 @@ public class GameView extends StackPane implements InitializingBean {
     
     private GridPane logoContentPane;
     private Button logoButton;
+    private ScaleTransition scaleTransition;
     
     private void initLogoButton() {
         //Content Pane
@@ -97,8 +106,54 @@ public class GameView extends StackPane implements InitializingBean {
         logoContentPane.getRowConstraints().addAll(FXUtility.createRowConstraints(true, 25, 25, 25, 25));
         logoContentPane.getColumnConstraints().addAll(FXUtility.createColumnConstraints(true, 25, 25, 25, 25));
         
+        var snakeLogoPanes = new ArrayList<Pane>();
+        for (int index = 0; 7 > index; index++) {
+            var snakePane = new Pane();
+            FXUtility.maxGrid(snakePane);
+            snakeLogoPanes.add(snakePane);
+            snakePane.setId(String.format("snake-logo-%d", index));
+        }
+        snakeLogoPanes.get(0).setId("snake-head-pane");
+        var snakeTailPane = snakeLogoPanes.get(snakeLogoPanes.size() - 1);
+        snakeTailPane.setId("snake-tail-pane");
+        snakeTailPane.setRotate(-90);
         
-        logoButton = new Button("LOGO BUTTON");
+        //Add to content pane in a zig zag way
+        int index = 0;
+        int x = 3;
+        int y = 0;
+        boolean down = true;
+        while (x >= 0 && index < 7) {
+            logoContentPane.add(snakeLogoPanes.get(index), x, y);
+            log.debug("I{} X{} Y{} {}", index, x, y, snakeLogoPanes.get(index).getId());
+            if (down) {
+                y++;
+                down = false;
+            } else {
+                x--;
+                down = true;
+            }
+            index++;
+        }
+    
+       
+        
+        logoButton = new Button();
+        scaleTransition = new ScaleTransition(Duration.millis(10000), logoButton);
+        scaleTransition.setToX(1.2f);
+        scaleTransition.setToY(1.2f);
+        scaleTransition.setCycleCount(Timeline.INDEFINITE);
+        scaleTransition.setAutoReverse(true);
+        logoButton.setEffect(new DropShadow(50, Color.rgb(1, 1, 1, 0.6)));
+        logoButton.getStyleClass().clear();
+        Platform.runLater(() -> {
+            logoButton.prefHeightProperty()
+                    .bind(Bindings.min(this.getScene().getWindow().widthProperty().multiply(.6), this.getScene().getWindow().heightProperty().multiply(.6)));
+            logoButton.prefWidthProperty()
+                    .bind(Bindings.min(this.getScene().getWindow().widthProperty().multiply(.6), this.getScene().getWindow().heightProperty().multiply(.6)));
+        });
+        logoButton.setGraphic(logoContentPane);
+        logoButton.setId("logo-button");
         logoButton.setOnAction(event -> {
             gameViewModel.phaseProperty().set(GamePhase.PLAY);
         });
@@ -120,9 +175,9 @@ public class GameView extends StackPane implements InitializingBean {
         arenaPane.setId("arena-pane");
         Platform.runLater(() -> {
             arenaPane.maxHeightProperty()
-                    .bind(Bindings.min(this.getScene().getWindow().widthProperty().multiply(.8), this.getScene().getWindow().heightProperty().multiply(.8)));
+                    .bind(Bindings.min(this.getScene().getWindow().widthProperty().multiply(.6), this.getScene().getWindow().heightProperty().multiply(.6)));
             arenaPane.maxWidthProperty()
-                    .bind(Bindings.min(this.getScene().getWindow().widthProperty().multiply(.8), this.getScene().getWindow().heightProperty().multiply(.8)));
+                    .bind(Bindings.min(this.getScene().getWindow().widthProperty().multiply(.6), this.getScene().getWindow().heightProperty().multiply(.6)));
             arenaPane.prefWidthProperty().bind(arenaPane.maxWidthProperty());
         });
         arenaPane.setBackground(new Background(new BackgroundFill(Color.MAGENTA, CornerRadii.EMPTY, Insets.EMPTY)));

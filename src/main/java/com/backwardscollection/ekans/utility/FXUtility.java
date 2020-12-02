@@ -2,8 +2,7 @@ package com.backwardscollection.ekans.utility;
 
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -55,5 +54,19 @@ public class FXUtility {
             colConstraints[index] = colC;
         }
         return colConstraints;
+    }
+    
+    public static Node[] maxGrid(Region... nodes){
+        for(Region region : nodes){
+            region.setMinSize(0, 0);
+            region.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        }
+        for(Node node : nodes){
+            GridPane.setHgrow(node, Priority.ALWAYS);
+            GridPane.setVgrow(node, Priority.ALWAYS);
+            GridPane.setFillHeight(node, true);
+            GridPane.setFillWidth(node, true);
+        }
+        return nodes;
     }
 }
