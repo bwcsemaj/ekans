@@ -40,8 +40,6 @@ public class SnakeLogoDriver extends Application {
         Platform.runLater(() -> {
             var rootContentPane = new GridPane();
             rootContentPane.getStylesheets().add(GameView.class.getResource("generic.css").toExternalForm());
-            rootContentPane.getRowConstraints().addAll(FXUtility.createRowConstraints(true, 10, 80, 10));
-            rootContentPane.getColumnConstraints().addAll(FXUtility.createColumnConstraints(true, 10, 80, 10));
             
             double[][] iconSizes = {{16, 16}, {32, 32}, {64, 64}, {128, 128}};
             var iconContentPane = new HBox();
@@ -134,7 +132,6 @@ public class SnakeLogoDriver extends Application {
         
         logoButton.getStyleClass().clear();
         logoButton.setGraphic(logoContentPane);
-        logoButton.setId("logo-button");
         return logoButton;
     }
     
