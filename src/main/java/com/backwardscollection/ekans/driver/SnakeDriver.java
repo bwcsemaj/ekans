@@ -46,10 +46,10 @@ public class SnakeDriver extends Application implements CommandLineRunner {
     public void run(String... args) throws Exception {
         stage.setScene(new Scene(gameView, INITIAL_WIDTH, INITIAL_HEIGHT));
         stage.setTitle(TITLE);
-        stage.getIcons().addAll(FXCollections.observableArrayList(new Image(SnakeDriver.class.getResource("/ekans_icon_128x128.png").toExternalForm()),
-                new Image(SnakeDriver.class.getResource("/ekans_icon_16x16.png").toExternalForm()),
-                new Image(SnakeDriver.class.getResource("/ekans_icon_32x32.png").toExternalForm()),
-                new Image(SnakeDriver.class.getResource("/ekans_icon_64x64.png").toExternalForm())));
+        stage.getIcons().addAll(FXCollections.observableArrayList(new Image(SnakeDriver.class.getResource("/assets/ekans_icon_128x128.png").toExternalForm()),
+                new Image(SnakeDriver.class.getResource("/assets/ekans_icon_16x16.png").toExternalForm()),
+                new Image(SnakeDriver.class.getResource("/assets/ekans_icon_32x32.png").toExternalForm()),
+                new Image(SnakeDriver.class.getResource("/assets/ekans_icon_64x64.png").toExternalForm())));
         stage.centerOnScreen();
         stage.setOnCloseRequest((event) -> System.exit(1));
         log.info("SHOWING STAGE");
