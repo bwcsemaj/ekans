@@ -20,6 +20,9 @@ import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -38,6 +41,9 @@ public class GameView extends StackPane implements InitializingBean {
     
     private StackPane contentPane;
     private Label displayLabel;
+    private BorderPane gameContentPane;
+    private Text topText;
+    private Text bottomText;
     
     
     @Autowired
@@ -50,8 +56,41 @@ public class GameView extends StackPane implements InitializingBean {
         //Initialize Logo
         initLogoButton();
         
+        //Initialize SCORE/GAME OVER and RETURN
+        gameContentPane = new BorderPane();
+        var topTextHolder = new StackPane();
+        topText = new Text("HELLO");
+        topText.setTextAlignment(TextAlignment.CENTER);
+        topText.textProperty().bind(Bindings.when(gameViewModel.phaseProperty().isEqualTo(GamePhase.PLAY))
+                .then(gameViewModel.snakeFX().bodyPartsProperty().sizeProperty().asString("SCORE: %d"))
+                .otherwise(gameViewModel.snakeFX().bodyPartsProperty().sizeProperty().asString("GAME OVER: %d")));
+        topText.fontProperty().bind(Bindings.createObjectBinding(() -> {
+            if (this.getScene() == null) {
+                return Font.font(20);
+            }
+            var fontSize = FXUtility.determineFontSize(topText.getText(), this.getScene().getWidth() * .4, this.getScene().getHeight() * .4);
+            return Font.font(fontSize);
+        }, this.sceneProperty(), this.widthProperty(), this.heightProperty()));
+        topTextHolder.getChildren().add(topText);
+        gameContentPane.setTop(topTextHolder);
+        topText.setId("top-text");
+    
+        var bottomTextHolder = new StackPane();
+        bottomTextHolder.visibleProperty().bind(gameViewModel.phaseProperty().isEqualTo(GamePhase.END));
+        bottomText = new Text("RETURN");
+        bottomText.setOnMouseReleased(event->{
+            gameViewModel.returnToMenu();
+        });
+        bottomText.setTextAlignment(TextAlignment.CENTER);
+        bottomText.setText("RETURN");
+        bottomText.fontProperty().bind(topText.fontProperty());
+        bottomTextHolder.getChildren().add(bottomText);
+        gameContentPane.setBottom(bottomTextHolder);
+        bottomText.setId("bottom-text");
+        
         //Initialize Arena
         initArena();
+        gameContentPane.setCenter(arenaContentPane);
         
         
         //Initialize Display
@@ -67,7 +106,7 @@ public class GameView extends StackPane implements InitializingBean {
                 }
                 case PLAY, END -> {
                     scaleTransition.stop();
-                    return arenaContentPane;
+                    return gameContentPane;
                 }
             }
             return null;
@@ -138,16 +177,16 @@ public class GameView extends StackPane implements InitializingBean {
         
         logoButton = new Button();
         scaleTransition = new ScaleTransition(Duration.millis(10000), logoButton);
-        scaleTransition.setToX(1.2f);
-        scaleTransition.setToY(1.2f);
+        scaleTransition.setToX(1.5f);
+        scaleTransition.setToY(1.5f);
         scaleTransition.setCycleCount(Timeline.INDEFINITE);
         scaleTransition.setAutoReverse(true);
         logoButton.getStyleClass().clear();
         Platform.runLater(() -> {
             logoButton.prefHeightProperty()
-                    .bind(Bindings.min(this.getScene().getWindow().widthProperty().multiply(.2), this.getScene().getWindow().heightProperty().multiply(.2)));
+                    .bind(Bindings.min(this.getScene().getWindow().widthProperty().multiply(.4), this.getScene().getWindow().heightProperty().multiply(.4)));
             logoButton.prefWidthProperty()
-                    .bind(Bindings.min(this.getScene().getWindow().widthProperty().multiply(.2), this.getScene().getWindow().heightProperty().multiply(.2)));
+                    .bind(Bindings.min(this.getScene().getWindow().widthProperty().multiply(.4), this.getScene().getWindow().heightProperty().multiply(.4)));
         });
         logoButton.setGraphic(logoContentPane);
         logoButton.setId("logo-button");

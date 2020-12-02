@@ -96,3 +96,19 @@
 #snake-logo-5 {
     -fx-background-color: COLOR-5;
 }
+
+#top-text {
+    -fx-fill: COLOR-10;
+}
+
+#bottom-text {
+    -fx-fill: COLOR-10;
+}
+
+#bottom-text:hover:pressed {
+    -fx-effect: dropshadow(two-pass-box, rgba(255, 255, 255, .4), 25, .5, 0, 0);
+}
+
+#bottom-text:hover {
+    -fx-effect: dropshadow(two-pass-box, rgb(16, 35, 206), 25, .5, 0, 0);
+}

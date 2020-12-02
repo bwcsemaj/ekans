@@ -193,4 +193,8 @@ public class GameViewModel implements InitializingBean {
     public void end() {
         timeline.stop();
     }
+    
+    public void returnToMenu() {
+        phaseProperty.set(GamePhase.MAIN_MENU);
+    }
 }
