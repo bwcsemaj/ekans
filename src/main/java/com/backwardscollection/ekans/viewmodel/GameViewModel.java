@@ -180,7 +180,7 @@ public class GameViewModel implements InitializingBean {
         int headY = headBodyPartFX.yProperty().get();
         int gridX = GRID_LENGTH;
         int gridY = GRID_LENGTH;
-        return headX > gridX || headX < 0 || headY > gridY || headY < 0 || gridBitSet.cardinality() == 0 ||
+        return headX >= gridX || headX < 0 || headY >= gridY || headY < 0 || gridBitSet.cardinality() == 0 ||
                 snakeFX.bodyPartsProperty()
                         .get()
                         .stream()
