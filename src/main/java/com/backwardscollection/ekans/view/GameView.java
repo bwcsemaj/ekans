@@ -130,8 +130,6 @@ public class GameView extends StackPane implements InitializingBean {
                     return;
                 }
                 
-                log.info("D{}", directionRequested);
-                
                 //Skip if it is the latest added
                 int directionRequestQueSize = gameViewModel.directionRequestQueProperty().size();
                 if(directionRequestQueSize > 0 &&
