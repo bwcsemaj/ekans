@@ -1,27 +1,27 @@
 package com.backwardscollection.ekans.config;
 
-public enum MoveDirection {
+public enum Direction {
     UP(){
         @Override
-        public MoveDirection getOpposite() {
+        public Direction getOpposite() {
             return DOWN;
         }
     }, DOWN {
         @Override
-        public MoveDirection getOpposite() {
+        public Direction getOpposite() {
             return UP;
         }
     }, LEFT {
         @Override
-        public MoveDirection getOpposite() {
+        public Direction getOpposite() {
             return RIGHT;
         }
     }, RIGHT {
         @Override
-        public MoveDirection getOpposite() {
+        public Direction getOpposite() {
             return LEFT;
         }
     };
     
-    public abstract MoveDirection getOpposite();
+    public abstract Direction getOpposite();
 }

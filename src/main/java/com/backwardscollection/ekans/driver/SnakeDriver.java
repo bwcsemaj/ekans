@@ -4,7 +4,6 @@ import com.backwardscollection.ekans.view.GameView;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -19,11 +18,14 @@ public class SnakeDriver extends Application implements CommandLineRunner {
     
     @Autowired
     private GameView gameView;
-    private static Stage primaryStage;
+    private static final String TITLE = "ekans";
+    private static final int INITIAL_WIDTH = 500;
+    private static final int INITIAL_HEIGHT= 500;
+    private static Stage stage;
     
     @Override
     public void start(Stage primaryStage) throws Exception {
-        this.primaryStage = primaryStage;
+        this.stage = primaryStage;
         Platform.runLater(() -> {
             var springContext =
                     new SpringApplicationBuilder(SnakeDriver.class).web(WebApplicationType.NONE).run();
@@ -33,10 +35,10 @@ public class SnakeDriver extends Application implements CommandLineRunner {
     
     @Override
     public void run(String... args) throws Exception {
-        primaryStage.setScene(new Scene(gameView, 500, 500));
-        primaryStage.setTitle("ekans");
-        primaryStage.show();
-        primaryStage.setOnCloseRequest((event) -> System.exit(1));
-        primaryStage.centerOnScreen();
+        stage.setScene(new Scene(gameView, INITIAL_WIDTH, INITIAL_HEIGHT));
+        stage.setTitle(TITLE);
+        stage.show();
+        stage.setOnCloseRequest((event) -> System.exit(1));
+        stage.centerOnScreen();
     }
 }

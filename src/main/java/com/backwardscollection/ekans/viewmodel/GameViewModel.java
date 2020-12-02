@@ -1,7 +1,7 @@
 package com.backwardscollection.ekans.viewmodel;
 
 import com.backwardscollection.ekans.config.GamePhase;
-import com.backwardscollection.ekans.config.MoveDirection;
+import com.backwardscollection.ekans.config.Direction;
 import com.backwardscollection.ekans.utility.EkansUtility;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -33,8 +33,8 @@ public class GameViewModel implements InitializingBean {
     private final LongProperty startTimeProperty = new SimpleLongProperty(-1);
     private final IntegerProperty pointsProperty = new SimpleIntegerProperty();
     
-    private final ListProperty<MoveDirection> moveDirectionRequestQueProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
-    private final ObjectProperty<MoveDirection> lastValidMoveDirectionProperty = new SimpleObjectProperty<>(MoveDirection.RIGHT);
+    private final ListProperty<Direction> directionRequestQueProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ObjectProperty<Direction> lastValidMoveDirectionProperty = new SimpleObjectProperty<>(Direction.RIGHT);
     
     //Set up Time Line
     private final Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0),
@@ -134,12 +134,12 @@ public class GameViewModel implements InitializingBean {
         //Try Update last Valid move Direction
         var previousLastValidMove = lastValidMoveDirectionProperty.get();
         
-        MoveDirection moveDirectionRequest = null;
-        if (moveDirectionRequestQueProperty.size() > 0) {
-            moveDirectionRequest = moveDirectionRequestQueProperty.remove(0);
+        Direction directionRequest = null;
+        if (directionRequestQueProperty.size() > 0) {
+            directionRequest = directionRequestQueProperty.remove(0);
         }
-        if (moveDirectionRequest != null && moveDirectionRequest.getOpposite() != lastValidMoveDirectionProperty.get()) {
-            lastValidMoveDirectionProperty.set(moveDirectionRequest);
+        if (directionRequest != null && directionRequest.getOpposite() != lastValidMoveDirectionProperty.get()) {
+            lastValidMoveDirectionProperty.set(directionRequest);
         }
         
         //move

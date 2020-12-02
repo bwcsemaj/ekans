@@ -1,7 +1,7 @@
 package com.backwardscollection.ekans.view;
 
 import com.backwardscollection.ekans.config.GamePhase;
-import com.backwardscollection.ekans.config.MoveDirection;
+import com.backwardscollection.ekans.config.Direction;
 import com.backwardscollection.ekans.utility.FXUtility;
 import com.backwardscollection.ekans.viewmodel.GameViewModel;
 import com.backwardscollection.ekans.viewmodel.SnakeBodyPartFX;
@@ -17,7 +17,6 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -31,7 +30,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Slf4j
 @Component
@@ -115,15 +113,15 @@ public class GameView extends StackPane implements InitializingBean {
         //Initialize Key presses
         Platform.runLater(() -> {
             this.getScene().setOnKeyPressed(event -> {
-                MoveDirection moveDirectionRequested = switch (event.getCode()) {
-                    case UP -> MoveDirection.UP;
-                    case DOWN -> MoveDirection.DOWN;
-                    case LEFT -> MoveDirection.LEFT;
-                    case RIGHT -> MoveDirection.RIGHT;
+                Direction directionRequested = switch (event.getCode()) {
+                    case UP -> Direction.UP;
+                    case DOWN -> Direction.DOWN;
+                    case LEFT -> Direction.LEFT;
+                    case RIGHT -> Direction.RIGHT;
                     default -> null;
                 };
-                log.debug("MOVE{}", moveDirectionRequested);
-                gameViewModel.moveDirectionRequestQueProperty().add(moveDirectionRequested);
+                log.debug("MOVE{}", directionRequested);
+                gameViewModel.directionRequestQueProperty().add(directionRequested);
             });
         });
         
