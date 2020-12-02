@@ -56,7 +56,18 @@
 }
 
 .content-pane {
-    -fx-background-color: linear-gradient(black 0.0%, COLOR-20 50.0%, black 100.0%);
+    -fx-background-color: linear-gradient(COLOR-20 0.0%,
+    COLOR-19 10.0%,
+    COLOR-18 20.0%,
+    COLOR-17 30.0%,
+    COLOR-16 40.0%,
+    COLOR-15 50.0%,
+    COLOR-14 60.0%,
+    COLOR-13 70.0%,
+    COLOR-12 80.0%,
+    COLOR-11 90.0%,
+    COLOR-10 100.0%
+    );
     -fx-hgap: 30.0;
     -fx-vgap: 30.0;
     -fx-padding: 30.0;
@@ -102,7 +113,7 @@
 }
 
 #bottom-text {
-    -fx-fill: COLOR-10;
+    -fx-fill: COLOR-20;
 }
 
 #bottom-text:hover:pressed {
