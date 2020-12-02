@@ -124,6 +124,20 @@ public class GameView extends StackPane implements InitializingBean {
                     case RIGHT -> Direction.RIGHT;
                     default -> null;
                 };
+                
+                //Another button was pressed that isn't important
+                if(directionRequested == null){
+                    return;
+                }
+                
+                log.info("D{}", directionRequested);
+                
+                //Skip if it is the latest added
+                int directionRequestQueSize = gameViewModel.directionRequestQueProperty().size();
+                if(directionRequestQueSize > 0 &&
+                        gameViewModel.directionRequestQueProperty().get(directionRequestQueSize-1) == directionRequested){
+                    return;
+                }
                 gameViewModel.directionRequestQueProperty().add(directionRequested);
             });
         });
