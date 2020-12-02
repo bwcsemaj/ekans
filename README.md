@@ -23,13 +23,14 @@ Who plays EKANS?
 Features
 ---------
 * Ability to move snake using UP DOWN RIGHT LEFT
-* System keep tracks of score (length of the snake)
+* System keeps track of score (length of the snake)
 * Que up valid moves ahead of time to make handling the snake more intuitive.
 
 Installation
 ------------
 Download Java 14
 Download EKANS jar 
+Download bat file or... 
 create a bat file named whatever you want
 enter...
 
@@ -37,7 +38,7 @@ enter...
 	PATH_TO_JAVA_14_EXE -jar ekans-1.0-SNAPSHOT-exec.jar
 	pause
 
-I might make this easier by wrapping jar into native runnables so to by pass downloading 14 and bat file but for now this is the way...
+I might make this easier by wrapping jar into native runnable so to by pass downloading 14 and bat file but for now this is the way...
 
 You can also fork my project, for your run configuration you will need to add this to VM arguements....
 
