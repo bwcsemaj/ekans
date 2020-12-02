@@ -118,10 +118,10 @@ public class GameView extends StackPane implements InitializingBean {
         Platform.runLater(() -> {
             this.getScene().setOnKeyPressed(event -> {
                 Direction directionRequested = switch (event.getCode()) {
-                    case UP -> Direction.UP;
-                    case DOWN -> Direction.DOWN;
-                    case LEFT -> Direction.LEFT;
-                    case RIGHT -> Direction.RIGHT;
+                    case UP, W -> Direction.UP;
+                    case DOWN, S -> Direction.DOWN;
+                    case LEFT, A -> Direction.LEFT;
+                    case RIGHT, D -> Direction.RIGHT;
                     default -> null;
                 };
                 
