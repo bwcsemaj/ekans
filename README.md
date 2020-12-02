@@ -47,3 +47,11 @@ Game Play
 ---------
 
 ![gameplay](ekans.gif)
+
+Tips
+----
+* Paint or have nodes unmanaged to make things easier
+* Use fixed sizes for things and rather scale whole project together than individually
+* I liked move que however it may need more work to allow buttons being held down while pressing others
+* Snake body parts implementation is not efficient but I did find it elegant on how I updated body parts
+* Grid system that doesn't relate directly to view I enjoyed
