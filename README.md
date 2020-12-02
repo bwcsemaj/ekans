@@ -1,4 +1,6 @@
-EKANS
+![Test](https://github.com/bwcsemaj/ekans/blob/master/src/main/resources/ekans_icon_64x64.png?raw=true) 
+
+EKANS 
 -----
 EKANS is my simple implementation of the classic [Snake game](https://en.wikipedia.org/wiki/Snake_(video_game_genre)). There is a snake and there is food. Get the food, your snake grows, the head of the snake has to be inbound and can't touch any of its body parts. Each food is worth one point. Points are not saved.
 
