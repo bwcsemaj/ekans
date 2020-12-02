@@ -50,7 +50,7 @@
 }
 
 #snake-head-pane{
-    -fx-background-color: white,
+    -fx-background-color: rgb(255,250,255),
     radial-gradient(focus-angle 45.0deg, focus-distance 50.0%, center 0.0% 0.0% , radius 35.0%, COLOR-20, transparent),
     radial-gradient(focus-angle 135.0deg, focus-distance 50.0%, center 100.0% 0.0% , radius 35.0%, COLOR-20, transparent);
     -fx-background-radius: 26.0 26.0 0.0 0.0;
@@ -62,4 +62,28 @@
     linear-gradient(COLOR-20 0.0%, COLOR-19 50.0%, COLOR-20 100.0%);
     -fx-background-radius: 100.0 100.0 0.0 0.0;
     -fx-border-radius: 100.0 100.0 0.0 0.0;
+}
+
+#snake-logo-black{
+    -fx-background-color: black;
+}
+
+#snake-logo-1{
+    -fx-background-color: COLOR-1;
+}
+
+#snake-logo-2{
+    -fx-background-color: COLOR-2;
+}
+
+#snake-logo-3{
+    -fx-background-color: COLOR-3;
+}
+
+#snake-logo-4{
+    -fx-background-color: COLOR-4;
+}
+
+#snake-logo-5{
+    -fx-background-color: COLOR-5;
 }

@@ -2,6 +2,7 @@ package com.backwardscollection.ekans.view;
 
 import com.backwardscollection.ekans.config.GamePhase;
 import com.backwardscollection.ekans.config.MoveDirection;
+import com.backwardscollection.ekans.utility.FXUtility;
 import com.backwardscollection.ekans.viewmodel.GameViewModel;
 import com.backwardscollection.ekans.viewmodel.SnakeBodyPartFX;
 import javafx.application.Platform;
@@ -87,9 +88,16 @@ public class GameView extends StackPane implements InitializingBean {
         contentPane.getStylesheets().add(GameView.class.getResource("generic.css").toExternalForm());
     }
     
+    private GridPane logoContentPane;
     private Button logoButton;
     
     private void initLogoButton() {
+        //Content Pane
+        logoContentPane = new GridPane();
+        logoContentPane.getRowConstraints().addAll(FXUtility.createRowConstraints(true, 25, 25, 25, 25));
+        logoContentPane.getColumnConstraints().addAll(FXUtility.createColumnConstraints(true, 25, 25, 25, 25));
+        
+        
         logoButton = new Button("LOGO BUTTON");
         logoButton.setOnAction(event -> {
             gameViewModel.phaseProperty().set(GamePhase.PLAY);
@@ -109,12 +117,6 @@ public class GameView extends StackPane implements InitializingBean {
         
         arenaPane = new AnchorPane();
         arenaContentPane.getChildren().add(arenaPane);
-        arenaPane.widthProperty().addListener((obs, oldValue, newValue) -> {
-            log.debug("ARENA W{} H{} MW{} MH{}", arenaPane.getWidth(), arenaPane.getHeight(), arenaPane.getMaxWidth(), arenaPane.getMaxHeight());
-        });
-        arenaPane.heightProperty().addListener((obs, oldValue, newValue) -> {
-            log.debug("ARENA W{} H{} MW{} MH{}", arenaPane.getWidth(), arenaPane.getHeight(), arenaPane.getMaxWidth(), arenaPane.getMaxHeight());
-        });
         arenaPane.setId("arena-pane");
         Platform.runLater(() -> {
             arenaPane.maxHeightProperty()
@@ -221,22 +223,22 @@ public class GameView extends StackPane implements InitializingBean {
     
     //Up Right = positive rotate
     //Left Down = negative rotate
-    private void tryRotateSnakeBodyPart(int newValue, int oldValue, Pane bodyPartPane, double positiveRotate, double negativeRotate){
-        if(newValue == oldValue){
+    private void tryRotateSnakeBodyPart(int newValue, int oldValue, Pane bodyPartPane, double positiveRotate, double negativeRotate) {
+        if (newValue == oldValue) {
             return;
-        } else if(newValue > oldValue){
+        } else if (newValue > oldValue) {
             //Going right
-            if("snake-head-pane".equals(bodyPartPane.idProperty().get())){
+            if ("snake-head-pane".equals(bodyPartPane.idProperty().get())) {
                 bodyPartPane.setRotate(positiveRotate);
-            }   else if("snake-tail-pane".equals(bodyPartPane.idProperty().get())){
+            } else if ("snake-tail-pane".equals(bodyPartPane.idProperty().get())) {
                 bodyPartPane.setRotate(negativeRotate);
             }
             return;
         }
         //Going left
-        if("snake-head-pane".equals(bodyPartPane.idProperty().get())){
+        if ("snake-head-pane".equals(bodyPartPane.idProperty().get())) {
             bodyPartPane.setRotate(negativeRotate);
-        }   else if("snake-tail-pane".equals(bodyPartPane.idProperty().get())){
+        } else if ("snake-tail-pane".equals(bodyPartPane.idProperty().get())) {
             bodyPartPane.setRotate(positiveRotate);
         }
     }
