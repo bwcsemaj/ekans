@@ -144,7 +144,6 @@ public class GameView extends StackPane implements InitializingBean {
         scaleTransition.setToY(1.2f);
         scaleTransition.setCycleCount(Timeline.INDEFINITE);
         scaleTransition.setAutoReverse(true);
-        logoButton.setEffect(new DropShadow(50, Color.rgb(1, 1, 1, 0.6)));
         logoButton.getStyleClass().clear();
         Platform.runLater(() -> {
             logoButton.prefHeightProperty()
