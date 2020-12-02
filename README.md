@@ -1,4 +1,4 @@
-![Test](https://github.com/bwcsemaj/ekans/blob/master/src/main/resources/ekans_icon_64x64.png?raw=true) 
+![Test](https://github.com/bwcsemaj/ekans/blob/master/src/main/resources/assets/ekans_icon_64x64.png?raw=true) 
 
 EKANS 
 -----
